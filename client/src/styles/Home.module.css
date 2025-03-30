@@ -1,0 +1,36 @@
+.formWrapper {
+    max-width: clamp(20rem, 50%, 40rem);
+    margin: auto;
+  }
+  
+  .logo {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin: 1rem;
+  }
+  
+  .logo img {
+    margin: 1rem;
+    width: 5rem;
+  }
+  
+  .logo h3 {
+    margin: 1rem;
+    color: var(--pico-secondary);
+  }
+  
+  .logo h3 strong {
+    color: var(--pico-primary);
+  }
+  
+  footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+  }
+  

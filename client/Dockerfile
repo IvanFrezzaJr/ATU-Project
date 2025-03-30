@@ -7,14 +7,17 @@ WORKDIR /app
 # Copie os arquivos do frontend para o contêiner
 COPY package*.json /app/
 
-# Instale as dependências
+# Instale as dependências (de produção e desenvolvimento)
 RUN npm install
 
-# Copie o restante dos arquivos
+# Copie o restante dos arquivos do projeto
 COPY . /app/
 
-# Exponha a porta onde o Vite servirá o frontend
-EXPOSE 3000
+# Caso o projeto precise ser compilado, adicione o comando de build
+# RUN npm run build   # Descomente essa linha se precisar construir o projeto antes de rodá-lo
 
-# Comando para iniciar o Vite
+# Exponha a porta onde o Vite servirá o frontend (porta padrão do Vite)
+EXPOSE 5173
+
+# Comando para iniciar o Vite em modo de desenvolvimento
 CMD ["npm", "run", "dev"]
