@@ -1,14 +1,11 @@
-.formWrapper {
-    max-width: clamp(20rem, 50%, 40rem);
-    margin: auto;
-  }
+
   
   .logo {
     width: 100%;
     display: flex;
     text-align: center;
     justify-content: center;
-    margin: 1rem;
+
   }
   
   .logo img {
@@ -25,12 +22,5 @@
     color: var(--pico-primary);
   }
   
-  footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-  }
+
   

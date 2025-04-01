@@ -1,17 +1,54 @@
+import { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
+import profilePlaceholder from '../assets/profile-placeholder.png';
+
+
+import { Link, useLocation , Switch } from "wouter-preact";
+
+
+interface IUser {
+  name: string; 
+  profilePic: string;
+}
 
 
 const Header = () => {
+  const [user, setUser] = useState<IUser | null>(null);
+  const [, navigate] = useLocation();
+
+  const handleLogin = () => {
+    setUser({ name: 'John Doe', profilePic: 'https://placehold.co/40x40' });
+    navigate('/Login'); 
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+   
+
+
   return (
     <header>
-      <nav class="container-fluid" id="menu">
+      <nav className="container" id="menu">
         <ul>
-          <li><strong>Acme Corp</strong></li>
+          <li><strong>Barter</strong> Exchange platform</li>
         </ul>
         <ul>
-          <li><a href="#" class="secondary">Services</a></li>
-          <li><a href="#" class="secondary">Offers</a></li>
-          <li><a href="#" class="secondary">About</a></li>
+       
+          <li><Link href="/offers" className="secondary active">Offers</Link></li>
+          <li><Link href="/About" className="secondary active">About</Link></li>
+          {user ? (
+            <>
+              <li><button className="outline secondary" onClick={handleLogout}>Logout</button></li>
+              <li className="profile"><a href="#"><img src={user.profilePic} alt="User Profile" /></a></li>
+            </>
+          ) : (
+            <>
+              <li><button className="secondary" onClick={handleLogin}>Sign up</button></li>
+              <li><button className="outline secondary" onClick={handleLogin}>Sign in</button></li>
+              <li className="profile"><a href="#"><img src={profilePlaceholder} alt="Default Profile" /></a></li>
+            </>
+          )}
           <li><ThemeToggle /></li>
         </ul>
       </nav>

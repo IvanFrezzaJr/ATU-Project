@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+
 
 const ThemeToggle = () => {
   const [theme, setTheme] = useState('light');
@@ -11,10 +14,13 @@ const ThemeToggle = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
+
+
   return (
-    <button onClick={toggleTheme}>
-      Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
-    </button>
+    <a href="#" class="secondary" onClick={toggleTheme}>
+       {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+        
+    </a>
   );
 };
 
