@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'preact/hooks';
 import ThemeToggle from './ThemeToggle';
 import profilePlaceholder from '../assets/profile-placeholder.png';
 
@@ -40,7 +40,7 @@ const Header = () => {
         </ul>
         <ul>
        
-          <li><Link href="/offers" className="secondary active">Offers</Link></li>
+          <li><Link href="/offer" className="secondary active">Offer</Link></li>
           <li><Link href="/About" className="secondary active">About</Link></li>
           {user ? (
             <>
