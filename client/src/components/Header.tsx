@@ -3,7 +3,7 @@ import ThemeToggle from './ThemeToggle';
 import profilePlaceholder from '../assets/profile-placeholder.png';
 
 
-import { Link, useLocation , Switch } from "wouter-preact";
+import { Link, useLocation } from "wouter-preact";
 
 
 interface IUser {

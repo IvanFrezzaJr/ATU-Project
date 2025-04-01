@@ -4,6 +4,7 @@ import { Route } from "wouter-preact";
 import Home from './pages/Home'
 import Offers from './pages/Offers';
 import About from './pages/About';
+import Login from './pages/Login';
 
 
 export function App() {
@@ -13,6 +14,7 @@ export function App() {
     <Route path="/"><Home /></Route>
     <Route path="/Offers"><Offers /></Route>
     <Route path="/About"><About /></Route>
+    <Route path="/Login"><Login /></Route>
     </>
   )
 }
