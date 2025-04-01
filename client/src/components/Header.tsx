@@ -21,6 +21,11 @@ const Header = () => {
     navigate('/Login'); 
   };
 
+  const handleSignUp = () => {
+    setUser({ name: 'John Doe', profilePic: 'https://placehold.co/40x40' });
+    navigate('/SignUp'); 
+  };
+
   const handleLogout = () => {
     setUser(null);
   };
@@ -44,7 +49,7 @@ const Header = () => {
             </>
           ) : (
             <>
-              <li><button className="secondary" onClick={handleLogin}>Sign up</button></li>
+              <li><button className="secondary" onClick={handleSignUp}>Sign up</button></li>
               <li><button className="outline secondary" onClick={handleLogin}>Sign in</button></li>
               <li className="profile"><a href="#"><img src={profilePlaceholder} alt="Default Profile" /></a></li>
             </>

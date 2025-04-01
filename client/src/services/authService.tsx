@@ -36,3 +36,15 @@ export const getCurrentUser = async () => {
   if (!response.ok) throw new Error('Error getting user');
   return await response.json();
 };
+
+
+export const registerUser = async (name: string, email: string, password: string): Promise<User> => {
+  const response = await fetch(`${apiUrl}register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+  });
+
+  if (!response.ok) throw new Error('Error registering user');
+  return await response.json();
+};
