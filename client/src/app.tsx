@@ -6,6 +6,7 @@ import Offers from './pages/Offers';
 import About from './pages/About';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 
 
 export function App() {
@@ -17,6 +18,7 @@ export function App() {
     <Route path="/About"><About /></Route>
     <Route path="/Login"><Login /></Route>
     <Route path="/SignUp"><SignUp /></Route>
+    <Route path="/Profile"><Profile /></Route>
     </>
   )
 }

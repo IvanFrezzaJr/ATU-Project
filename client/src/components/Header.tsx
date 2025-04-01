@@ -45,13 +45,13 @@ const Header = () => {
           {user ? (
             <>
               <li><button className="outline secondary" onClick={handleLogout}>Logout</button></li>
-              <li className="profile"><a href="#"><img src={user.profilePic} alt="User Profile" /></a></li>
+              <li className="profile"><Link href="/Profile"><img src={user.profilePic} alt="User Profile" /></Link></li>
             </>
           ) : (
             <>
               <li><button className="secondary" onClick={handleSignUp}>Sign up</button></li>
               <li><button className="outline secondary" onClick={handleLogin}>Sign in</button></li>
-              <li className="profile"><a href="#"><img src={profilePlaceholder} alt="Default Profile" /></a></li>
+              <li className="profile"><Link href="/Profile"><img src={profilePlaceholder} alt="Default Profile" /></Link></li>
             </>
           )}
           <li><ThemeToggle /></li>
