@@ -1,12 +1,14 @@
 
 
 import { Route } from "wouter-preact";
-import Home from './pages/Home'
-import Offer from './pages/Offer';
-import About from './pages/About';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Profile from './pages/Profile';
+
+import Home from './pages/HomePage'
+import ItemList from './pages/ItemListPage';
+import About from './pages/AboutPage';
+import Login from './pages/LoginPage';
+import SignUp from './pages/SignUpPage';
+import Profile from './pages/ProfilePage';
+import TradeList from './pages/TradeListPage';
 
 
 export function App() {
@@ -14,11 +16,12 @@ export function App() {
   return (
     <>
     <Route path="/"><Home /></Route>
-    <Route path="/Offer"><Offer /></Route>
-    <Route path="/About"><About /></Route>
-    <Route path="/Login"><Login /></Route>
-    <Route path="/SignUp"><SignUp /></Route>
-    <Route path="/Profile"><Profile /></Route>
+    <Route path="/itemlist"><ItemList /></Route>
+    <Route path="/about"><About /></Route>
+    <Route path="/login"><Login /></Route>
+    <Route path="/signup"><SignUp /></Route>
+    <Route path="/profile"><Profile /></Route>
+    <Route path="/tradelist"><TradeList /></Route>
     </>
   )
 }
