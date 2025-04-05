@@ -67,7 +67,9 @@ button {
   font-size: medium;
 }
 
-
+.content {
+  padding: 3rem 0;
+}
 
 
 .center {

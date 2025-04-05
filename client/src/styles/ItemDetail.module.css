@@ -56,13 +56,14 @@
 
 
 .item-info img {
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 100px;
+    min-height: 100px;
     padding-left: 0.5rem;
+    padding-bottom: 0.3rem;
 }
 
 .item-info h4 {
-    font-size: small;
+    font-size: medium;
     padding-left: 0.5rem;
     margin-bottom: 0;
 }

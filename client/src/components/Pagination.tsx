@@ -1,38 +1,64 @@
-import { Link } from 'wouter-preact';
 import styles from '../styles/Pagination.module.css';
 
 interface PaginationProps {
-    currentPage: number;
-    totalPages: number;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
-const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
-    return (
-        <div class={styles.pagination}>
-            {/* Previous Link */}
-            <Link 
-                href={`?page=${currentPage - 1}`} 
-                class={currentPage === 1 ? styles.disabled : ''}
-            >
-                <a>&lt; Previous</a>
-            </Link>
+const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+  const goToPage = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    onPageChange(page);
+  };
 
-            {/* Page number Links */}
-            {[...Array(totalPages)].map((_, index) => (
-                <Link key={index} href={`?page=${index + 1}`} class={currentPage === index + 1 ? styles.active : ''}>
-                    <a>{index + 1}</a>
-                </Link>
-            ))}
+  const getPageNumbers = () => {
+    const range: number[] = [];
+    const maxVisible = 5;
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(1, currentPage - half);
+    let end = Math.min(totalPages, start + maxVisible - 1);
 
-            {/* Next Link */}
-            <Link 
-                href={`?page=${currentPage + 1}`} 
-                class={currentPage === totalPages ? styles.disabled : ''}
-            >
-                <a>Next &gt;</a>
-            </Link>
-        </div>
-    );
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    return range;
+  };
+
+  return (
+    <div class={styles.pagination}>
+      <button
+        class={currentPage === 1 ? styles.disabled : ''}
+        onClick={() => goToPage(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        &lt; Previous
+      </button>
+
+      {getPageNumbers().map((page) => (
+        <button
+          key={page}
+          onClick={() => goToPage(page)}
+          class={currentPage === page ? styles.active : ''}
+        >
+          {page}
+        </button>
+      ))}
+
+      <button
+        onClick={() => goToPage(currentPage + 1)}
+        class={currentPage === totalPages ? styles.disabled : ''}
+        disabled={currentPage === totalPages}
+      >
+        Next &gt;
+      </button>
+    </div>
+  );
 };
 
 export default Pagination;

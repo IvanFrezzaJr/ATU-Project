@@ -2,9 +2,9 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-import OfferList from '../components/OfferList';
+import ItemList from '../components/ItemList';
 
-import style from '../styles/Offer.module.css';
+import style from '../styles/ItemDetail.module.css';
 
 const Offer = () => {
     return (
@@ -15,7 +15,7 @@ const Offer = () => {
                 <div className={style["content"]}>
 
                     <h1 class="center">Offer List</h1>
-                    <OfferList />
+                    <ItemList />
                 </div>
             </div>
         </main>

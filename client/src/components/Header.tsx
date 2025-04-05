@@ -40,7 +40,7 @@ const Header = () => {
         </ul>
         <ul>
        
-          <li><Link href="/offer" className="secondary active">Offer</Link></li>
+          <li><Link href="/itemlist" className="secondary active">Offers</Link></li>
           <li><Link href="/About" className="secondary active">About</Link></li>
           {user ? (
             <>
