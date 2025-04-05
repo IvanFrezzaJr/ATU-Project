@@ -1,12 +1,13 @@
-import ActionButton from "./CustomButton";
-
 import styles from "../styles/ItemDetail.module.css";
-
-
+import { ItemDetailFooterSetup } from "../types/item";
+import { PageType } from "../types/page";
+import { useCustomButtonBehavior } from "../hooks/useCustomButtonBehavior";
 
 type ButtonActionType = "navigate" | "alert" | "custom";
 
-interface OfferProps {
+
+interface ItemDetailProps {
+    productId: number;
     productName: string;
     productDescription: string;
     productImage: string;
@@ -14,21 +15,44 @@ interface OfferProps {
     userName: string;
     postDate: Date;
     offersCount: number;
-    showFooter?: boolean;
+    footerSetup?: ItemDetailFooterSetup;
     buttonActionType?: ButtonActionType;
-    customButtonAction?: () => void; 
+    customButtonAction?: () => void;
 }
 
-const ItemDetail = ({
-    productName,
-    productDescription,
-    productImage,
-    userImage,
-    userName,   
-    postDate,
-    offersCount,
-    showFooter=true
-}: OfferProps) => {
+
+interface CustomButtonProps {
+    page: PageType;
+    id?: number;
+}
+
+
+const CustomButton = (customButtonProps: CustomButtonProps) => {
+    switch (customButtonProps.page) {
+        case PageType.Offers:
+            return (
+                <button
+                    onClick={useCustomButtonBehavior(PageType.Trade, { id: customButtonProps.id ?? 0 })}>
+                    Make a offer
+                </button>
+            )
+        case PageType.Trade:
+            return (
+                <button
+                    onClick={useCustomButtonBehavior(PageType.Confirm)}>
+                    Trade
+                </button>
+            )
+
+        default:
+            break;
+    }
+}
+
+
+const ItemDetail = (itemDetailProps: ItemDetailProps) => {
+
+    const footerSetup = itemDetailProps.footerSetup;
 
 
     return (
@@ -36,38 +60,37 @@ const ItemDetail = ({
 
             <div className={styles['item-info']}>
                 <div>
-                    <img src={productImage} alt="Product Image" />
+                    <img src={itemDetailProps.productImage} alt="Product Image" />
                 </div>
                 <div>
                     <div>
-                        <h4>{productName}</h4>
-                        <p>{productDescription}</p>
+                        <h4>{itemDetailProps.productName}</h4>
+                        <p>{itemDetailProps.productDescription}</p>
                     </div>
                 </div>
             </div>
 
-            { showFooter &&
-                <div className={`grid ${styles["footer"]}`}>
+            <div className={`grid ${styles["footer"]}`}>
+                {footerSetup?.userInfo?.show &&
                     <div className={styles['user-info']}>
                         <div>
-                            <img src={userImage} alt="User Image" />
+                            <img src={itemDetailProps.userImage} alt="User Image" />
                         </div>
                         <div className={styles['user-info-text']}>
-                            <small><strong>{userName}</strong></small>
-                            <small>Posted on: {postDate.toLocaleDateString()}</small>
+                            <small><strong>{itemDetailProps.userName}</strong></small>
+                            <small>Posted on: {itemDetailProps.postDate.toLocaleDateString()}</small>
                         </div>
                     </div>
-                    <div className={styles['offer-info']}>
-                        <ActionButton 
-                            actionType="tradelist" 
-                            label="Make an Offer" 
-                            customAction={() => console.log("Ação personalizada!")} 
-                        />
+                }
 
-                        <small>These goods have <strong>{offersCount}</strong> offers</small>
+                {footerSetup?.actionMenu?.show &&
+                    <div className={styles['offer-info']}>
+                        <CustomButton page={footerSetup?.page} id={itemDetailProps.productId} />
+                        <small>These goods have <strong>{itemDetailProps.offersCount}</strong> offers</small>
                     </div>
-                </div>
-            }
+                }
+            </div>
+
         </article>
     );
 };

@@ -6,7 +6,11 @@ import ItemList from '../components/ItemList';
 
 import style from '../styles/ItemDetail.module.css';
 
+import {PageType} from '../types/page';
+
+
 const Offer = () => {
+
     return (
         <div>
       <Header />
@@ -15,7 +19,7 @@ const Offer = () => {
                 <div className={style["content"]}>
 
                     <h1 class="center">Offer List</h1>
-                    <ItemList />
+                    <ItemList page={PageType.Offers} />
                 </div>
             </div>
         </main>

@@ -1,7 +1,7 @@
-import {ItemResponsePaginated, PaginationResult, ItemStatus} from '../types/item';
+import {UserItemResponse, PaginationResult, ItemStatus} from '../types/item';
 
   
-  let offersData: ItemResponsePaginated[] = [
+  let offersData: UserItemResponse[] = [
     {
         id: 1,
         name: "Product 1",
@@ -128,16 +128,16 @@ import {ItemResponsePaginated, PaginationResult, ItemStatus} from '../types/item
   let nextId = offersData.length + 1;
   
   const itemService = {
-    getAll(): ItemResponsePaginated[] {
+    getAll(): UserItemResponse[] {
       return offersData;
     },
   
-    getById(id: number): ItemResponsePaginated | undefined {
+    getById(id: number): UserItemResponse | undefined {
       return offersData.find(item => item.id === id);
     },
   
-    create(item: Omit<ItemResponsePaginated, "id" | "createdAt" | "updatedAt">): ItemResponsePaginated {
-      const newItem: ItemResponsePaginated = {
+    create(item: Omit<UserItemResponse, "id" | "createdAt" | "updatedAt">): UserItemResponse {
+      const newItem: UserItemResponse = {
         ...item,
         id: nextId++,
         createdAt: new Date(),
@@ -147,7 +147,7 @@ import {ItemResponsePaginated, PaginationResult, ItemStatus} from '../types/item
       return newItem;
     },
   
-    update(id: number, updatedItem: Partial<Omit<ItemResponsePaginated, "id">>): ItemResponsePaginated | null {
+    update(id: number, updatedItem: Partial<Omit<UserItemResponse, "id">>): UserItemResponse | null {
       const index = offersData.findIndex(item => item.id === id);
       if (index === -1) return null;
   
@@ -165,7 +165,7 @@ import {ItemResponsePaginated, PaginationResult, ItemStatus} from '../types/item
       return offersData.length < originalLength;
     },
   
-    getPaginated(page: number = 1, itemsPerPage: number = 2): PaginationResult<ItemResponsePaginated> {
+    getPaginated(page: number = 1, itemsPerPage: number = 2): PaginationResult<UserItemResponse> {
       const totalItems = offersData.length;
       const totalPages = Math.ceil(totalItems / itemsPerPage);
       const start = (page - 1) * itemsPerPage;
