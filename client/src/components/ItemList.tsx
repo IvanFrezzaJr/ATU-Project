@@ -1,14 +1,33 @@
 import ItemDetail from './ItemDetail';
 import Pagination from './Pagination';
-import { ItemResponsePaginated, PaginationResult } from '../types/item';
+import { UserItemResponse, PaginationResult, ItemDetailFooterSetup } from '../types/item';
 import itemService from "../services/itemService";
 import { useEffect, useState } from 'preact/hooks';
+import { PageType } from '../types/page';
 
-const ItemList = () => {
-  const [items, setItems] = useState<ItemResponsePaginated[]>([]);
-  const [pagination, setPagination] = useState<PaginationResult<ItemResponsePaginated> | null>(null);
+
+interface ItemListProps {
+  page: PageType;
+}
+
+const ItemList = (itemListProps: ItemListProps) => {
+  const [items, setItems] = useState<UserItemResponse[]>([]);
+  const [pagination, setPagination] = useState<PaginationResult<UserItemResponse> | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
+
+
+  const itemDetailFooterSetup: ItemDetailFooterSetup = {
+    userInfo: {
+      show: true
+    },
+    actionMenu: {
+      show: true
+    },
+    page: itemListProps.page
+  };
+
+
 
   useEffect(() => {
     const result = itemService.getPaginated(currentPage, itemsPerPage);
@@ -20,9 +39,9 @@ const ItemList = () => {
 
   return (
     <div>
-      {items.map((item: ItemResponsePaginated) => (
+      {items.map((item: UserItemResponse) => (
         <ItemDetail
-          key={item.id}
+          productId={item.id}
           productName={item.name}
           productDescription={item.description}
           productImage={item.imagesPath[0]}
@@ -30,7 +49,7 @@ const ItemList = () => {
           userName={item.user.name}
           postDate={item.createdAt}
           offersCount={2}
-          showFooter={true}
+          footerSetup={itemDetailFooterSetup}
         />
       ))}
 

@@ -1,5 +1,18 @@
 import {User} from './user';
+import {PageType} from './page';
 
+
+
+export interface ItemDetailFooterSetup{
+    userInfo?: {
+        show: boolean
+    };
+    actionMenu?: {
+        show: boolean,
+    }
+    page: PageType
+}
+  
 
 export interface ItemResponse {
     id: number;
@@ -18,7 +31,7 @@ export interface Item extends ItemResponse {
 }
 
 
-export interface ItemResponsePaginated extends ItemResponse {
+export interface UserItemResponse extends ItemResponse {
     user: User;
 }
 
