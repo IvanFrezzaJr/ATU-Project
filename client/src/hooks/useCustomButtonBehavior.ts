@@ -4,35 +4,43 @@ import { useLocation } from "wouter-preact";
 import { PageType } from "../types/page";
 
 
-interface Params{
+interface Params {
   id: number;
+  offer_id?: number;
 }
 
-export function useCustomButtonBehavior(pageType: PageType, params?:Params): () => void {
+export function useCustomButtonBehavior(pageType: PageType, params?: Params): () => void {
 
   const [, navigate] = useLocation();
 
+  console.log(pageType, params)
+
   switch (pageType) {
-    case 'offers':
+    case 'items':
       return () => {
-        navigate("/offers");
-      };
-    case 'confirm':
-      return () => {
-        navigate("/confirm");
+        navigate("/items");
       };
     case 'trade':
-      if (params){
+      if (params && params.offer_id) {
         return () => {
-          navigate(`/trade/${params.id}`);
+          navigate(`/trade/${params.id}/to/${params.offer_id}`);
         };
       }
       return () => {
-        navigate("/trade");
+        navigate("/");
+      };
+    case 'offers':
+      if (params) {
+        return () => {
+          navigate(`/offers/${params.id}`);
+        };
+      }
+      return () => {
+        navigate("/");
       };
     default:
       return () => {
-        navigate("/offers");
+        navigate("/");
       };
   }
 }
