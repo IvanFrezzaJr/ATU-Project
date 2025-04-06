@@ -4,7 +4,7 @@ import { login } from "../services/authService";
 import Message from "../components/Message";
 import styles from '../styles/Auth.module.css';
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
@@ -69,4 +69,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

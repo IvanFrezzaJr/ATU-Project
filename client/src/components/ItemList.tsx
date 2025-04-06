@@ -1,4 +1,4 @@
-import ItemDetail from './ItemDetail';
+import ItemDetailCard from './ItemDetailCard';
 import Pagination from './Pagination';
 import { UserItemResponse, PaginationResult, ItemDetailFooterSetup } from '../types/item';
 import itemService from "../services/itemService";
@@ -6,8 +6,10 @@ import { useEffect, useState } from 'preact/hooks';
 import { PageType } from '../types/page';
 
 
+
 interface ItemListProps {
   page: PageType;
+  item?: UserItemResponse;
 }
 
 const ItemList = (itemListProps: ItemListProps) => {
@@ -17,6 +19,15 @@ const ItemList = (itemListProps: ItemListProps) => {
   const itemsPerPage = 2;
 
 
+  useEffect(() => {
+    const result = itemService.getPaginated(currentPage, itemsPerPage);
+    setItems(result.data);
+    setPagination(result);
+  }, [currentPage, itemsPerPage]);
+
+
+
+
   const itemDetailFooterSetup: ItemDetailFooterSetup = {
     userInfo: {
       show: true
@@ -24,33 +35,27 @@ const ItemList = (itemListProps: ItemListProps) => {
     actionMenu: {
       show: true
     },
-    page: itemListProps.page
+    page: itemListProps.page,
+    item: itemListProps.item,
   };
 
-
-
-  useEffect(() => {
-    const result = itemService.getPaginated(currentPage, itemsPerPage);
-    setItems(result.data);
-    setPagination(result);
-  }, [currentPage, itemsPerPage]);
 
   if (!pagination) return <p>Loading...</p>;
 
   return (
     <div>
       {items.map((item: UserItemResponse) => (
-        <ItemDetail
-          productId={item.id}
-          productName={item.name}
-          productDescription={item.description}
-          productImage={item.imagesPath[0]}
-          userImage={item.user.image}
-          userName={item.user.name}
-          postDate={item.createdAt}
-          offersCount={2}
-          footerSetup={itemDetailFooterSetup}
-        />
+          <ItemDetailCard
+            productId={item.id}
+            productName={item.name}
+            productDescription={item.description}
+            productImage={item.imagesPath[0]}
+            userImage={item.user.image}
+            userName={item.user.name}
+            postDate={item.createdAt}
+            offersCount={2}
+            footerSetup={itemDetailFooterSetup}
+          />
       ))}
 
       <Pagination

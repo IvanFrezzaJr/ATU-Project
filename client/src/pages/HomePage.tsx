@@ -4,8 +4,9 @@ import Footer from '../components/Footer';
 import styles from '../styles/Home.module.css';
 
 import logo from '../assets/logo.svg';
+import { Link } from 'wouter-preact';
 
-const Home = () => {
+const HomePage = () => {
   return (
     <div>
       <Header />
@@ -21,11 +22,13 @@ const Home = () => {
             <input name="search" type="search" placeholder="Search" />
             <input type="submit" value="Search" />
           </form>
+          <div class="center">Dont you know what you are looking for? <Link href="/items" >Click here</Link> to see all items</div>
         </div>
+        
       </main>
       <Footer />
     </div>
   );
 };
 
-export default Home;
+export default HomePage;

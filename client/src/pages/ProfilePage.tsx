@@ -5,7 +5,7 @@ import { searchAddress } from "../services/addressService";
 import Message from "../components/Message";
 import styles from '../styles/Auth.module.css';
 
-const Profile = () => {
+const ProfilePage = () => {
     // user  
     const [userId, setUserId] = useState<string | null>(null);
     const [name, setName] = useState("");
@@ -234,4 +234,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default ProfilePage;

@@ -1,7 +1,9 @@
 import styles from "../styles/ItemDetail.module.css";
 import { ItemDetailFooterSetup } from "../types/item";
 import { PageType } from "../types/page";
+
 import { useCustomButtonBehavior } from "../hooks/useCustomButtonBehavior";
+
 
 type ButtonActionType = "navigate" | "alert" | "custom";
 
@@ -24,22 +26,28 @@ interface ItemDetailProps {
 interface CustomButtonProps {
     page: PageType;
     id?: number;
+    offer_id?: number;
 }
 
 
 const CustomButton = (customButtonProps: CustomButtonProps) => {
+
     switch (customButtonProps.page) {
-        case PageType.Offers:
+        case PageType.Items:
             return (
                 <button
-                    onClick={useCustomButtonBehavior(PageType.Trade, { id: customButtonProps.id ?? 0 })}>
+                    onClick={useCustomButtonBehavior(PageType.Offers, { 
+                        id: customButtonProps.id ?? 0 })}>
                     Make a offer
                 </button>
             )
-        case PageType.Trade:
+        case PageType.Offers:
             return (
                 <button
-                    onClick={useCustomButtonBehavior(PageType.Confirm)}>
+                    onClick={
+                        useCustomButtonBehavior(PageType.Trade, { 
+                            id: customButtonProps.id ?? 0, 
+                            offer_id: customButtonProps.offer_id ?? 0 })}>
                     Trade
                 </button>
             )
@@ -50,11 +58,11 @@ const CustomButton = (customButtonProps: CustomButtonProps) => {
 }
 
 
-const ItemDetail = (itemDetailProps: ItemDetailProps) => {
+const ItemDetailCard = (itemDetailProps: ItemDetailProps) => {
+
 
     const footerSetup = itemDetailProps.footerSetup;
-
-
+    
     return (
         <article>
 
@@ -85,7 +93,11 @@ const ItemDetail = (itemDetailProps: ItemDetailProps) => {
 
                 {footerSetup?.actionMenu?.show &&
                     <div className={styles['offer-info']}>
-                        <CustomButton page={footerSetup?.page} id={itemDetailProps.productId} />
+                        <CustomButton 
+                        page={footerSetup?.page} 
+                        id={itemDetailProps.productId}
+                        offer_id={footerSetup.item?.id}
+                         />
                         <small>These goods have <strong>{itemDetailProps.offersCount}</strong> offers</small>
                     </div>
                 }
@@ -95,4 +107,4 @@ const ItemDetail = (itemDetailProps: ItemDetailProps) => {
     );
 };
 
-export default ItemDetail;
+export default ItemDetailCard;
