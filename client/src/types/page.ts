@@ -1,6 +1,6 @@
 export enum PageType {
+    Items = "items",
     Offers = "offers",
     Trade = "trade",
-    Confirm="confirm",
     Default = "default",
   }

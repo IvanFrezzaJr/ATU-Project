@@ -10,7 +10,8 @@ export interface ItemDetailFooterSetup{
     actionMenu?: {
         show: boolean,
     }
-    page: PageType
+    page: PageType,
+    item?: UserItemResponse
 }
   
 

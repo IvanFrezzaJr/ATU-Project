@@ -36,11 +36,11 @@ const Header = () => {
     <header>
       <nav className="container" id="menu">
         <ul>
-          <li><strong>Barter</strong> Exchange platform</li>
+          <li><Link href="/" ><strong>Barter</strong> Exchange platform</Link></li>
         </ul>
         <ul>
        
-          <li><Link href="/offers" className="secondary active">Offers</Link></li>
+          <li><Link href="/items" className="secondary active">Items</Link></li>
           <li><Link href="/About" className="secondary active">About</Link></li>
           {user ? (
             <>

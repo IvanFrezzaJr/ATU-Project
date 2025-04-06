@@ -1,28 +1,35 @@
 
 
-import { Route } from "wouter-preact";
+import { Route, Switch } from "wouter-preact";
 
-import Home from './pages/HomePage'
-import ItemList from './pages/ItemListPage';
-import About from './pages/AboutPage';
-import Login from './pages/LoginPage';
-import SignUp from './pages/SignUpPage';
+import HomePage from './pages/HomePage'
+import ItemListPage from './pages/ItemListPage';
+import AboutPage from './pages/AboutPage';
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 import Profile from './pages/ProfilePage';
-import TradeList from './pages/TradeListPage';
-import TradeListPage from "./pages/TradeListPage";
-
+import OfferListPage from "./pages/OfferListPage";
+import TradePage from "./pages/TradePage";
+import NotFound from "./pages/NotFound";
+import ConfirmTradePage from "./pages/ConfirmTradePage";
 
 export function App() {
 
   return (
-    <>
-    <Route path="/"><Home /></Route>
-    <Route path="/offers"><ItemList /></Route>
-    <Route path="/about"><About /></Route>
-    <Route path="/login"><Login /></Route>
-    <Route path="/signup"><SignUp /></Route>
-    <Route path="/profile"><Profile /></Route>
-    <Route path="/trade/:item_id<number>"  component={TradeListPage}><TradeList /></Route>
-    </>
+      <Switch>
+        <Route path="/"><HomePage /></Route>
+        <Route path="/items"><ItemListPage /></Route>
+        <Route path="/about"><AboutPage /></Route>
+        <Route path="/login"><LoginPage /></Route>
+        <Route path="/signup"><SignUpPage /></Route>
+        <Route path="/profile"><Profile /></Route>
+        <Route path="/confirm"><ConfirmTradePage /></Route>
+        <Route path="/offers/:item_id<number>" component={OfferListPage}><OfferListPage /></Route>
+        <Route path="/trade/:item_id<number>/to/:offer_item_id<number>" component={TradePage}><TradePage /></Route>
+        {/* Fallback 404 */}
+        <Route>
+          <NotFound />
+        </Route>
+      </Switch>
   )
 }
