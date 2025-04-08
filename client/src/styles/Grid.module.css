@@ -1,0 +1,26 @@
+.searchPagination {
+    display: flex;
+    justify-content: space-around;
+}
+
+.searchPagination button {
+    max-height: 3rem;
+    margin-left: 20px;
+}
+
+.footerPagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.searchPagination h2 {
+    width: 50%;
+}
+
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}

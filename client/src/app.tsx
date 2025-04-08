@@ -7,7 +7,8 @@ import ItemListPage from './pages/ItemListPage';
 import AboutPage from './pages/AboutPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-import Profile from './pages/ProfilePage';
+import ProfilePage from './pages/ProfilePage';
+import AdminPage from './pages/AdminPage';
 import OfferListPage from "./pages/OfferListPage";
 import TradePage from "./pages/TradePage";
 import NotFound from "./pages/NotFound";
@@ -22,7 +23,9 @@ export function App() {
         <Route path="/about"><AboutPage /></Route>
         <Route path="/login"><LoginPage /></Route>
         <Route path="/signup"><SignUpPage /></Route>
-        <Route path="/profile"><Profile /></Route>
+        <Route path="/profile"><ProfilePage /></Route>
+        <Route path="/admin"><AdminPage /></Route>
+
         <Route path="/confirm"><ConfirmTradePage /></Route>
         <Route path="/offers/:item_id<number>" component={OfferListPage}><OfferListPage /></Route>
         <Route path="/trade/:item_id<number>/to/:offer_item_id<number>" component={TradePage}><TradePage /></Route>
