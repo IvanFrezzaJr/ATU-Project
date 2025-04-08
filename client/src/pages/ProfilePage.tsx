@@ -91,7 +91,7 @@ const ProfilePage = () => {
 
     return (
         <main>
-            <div class={styles.content}>
+            
                 <div class="viewport">
                     <h1 class={styles.center}>Profile</h1>
                     <form onSubmit={handleUpdate}>
@@ -222,7 +222,7 @@ const ProfilePage = () => {
                         <button type="submit">Update</button>
                     </form>
                 </div>
-            </div>
+       
             {showError && (
                 <Message
                     title="Error"
