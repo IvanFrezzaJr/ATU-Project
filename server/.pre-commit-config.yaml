@@ -1,0 +1,44 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: fix-byte-order-marker
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      # Ruff linter + formatter
+      - id: ruff-lint
+        name: ruff-lint
+        entry: ruff check .
+        language: system
+        types: [python]
+
+      - id: ruff-format
+        name: ruff-format
+        entry: ruff format .
+        language: system
+        types: [python]
+
+      # Mypy type checking
+      - id: mypy
+        name: mypy
+        entry: mypy .
+        language: system
+        types: [python]
+
+      # Run unit tests with pytest
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        types: [python]
