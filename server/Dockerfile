@@ -29,5 +29,4 @@ COPY . /app/
 EXPOSE 8000
 
 # Comando para rodar a aplicação FastAPI com Uvicorn
-CMD ["poetry", "run", "uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
-
+CMD ["poetry", "run", "uvicorn", "app.main:api", "--reload", "--host", "0.0.0.0", "--port", "8000"]

@@ -19,26 +19,39 @@ repos:
       # Ruff linter + formatter
       - id: ruff-lint
         name: ruff-lint
-        entry: ruff check .
+        entry: bash
         language: system
         types: [python]
+        args:
+        - -c
+        - "cd server && poetry run ruff check . --config pyproject.toml"
 
       - id: ruff-format
         name: ruff-format
-        entry: ruff format .
+        entry: bash
         language: system
         types: [python]
+        args:
+        - -c
+        - "cd server && poetry run ruff format . --config pyproject.toml"
+
 
       # Mypy type checking
       - id: mypy
         name: mypy
-        entry: mypy .
+        entry: bash
         language: system
         types: [python]
+        args:
+        - -c
+        - "cd server && poetry run mypy . --config pyproject.toml"
 
-      # Run unit tests with pytest
+      # # Run unit tests with pytest
       - id: pytest
         name: pytest
-        entry: pytest
+        entry: bash
         language: system
         types: [python]
+        args:
+        - -c
+        - "cd server && poetry run pytest . --cov=tests"
