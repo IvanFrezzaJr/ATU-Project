@@ -20,7 +20,7 @@ alembic = "^1.15.2"
 pwdlib = {extras = ["argon2"], version = "^0.2.1"}
 pyjwt = "^2.10.1"
 python-multipart = "^0.0.20"
-psycopg = {extras = ["binary"], version = "^3.2.6"}
+psycopg2 = {extras = ["binary"], version = "^2.9.10"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -36,9 +36,10 @@ pythonpath = "."
 addopts = '-p no:warnings'
 
 
+
 [tool.ruff]
 line-length = 79
-extend-exclude = ['migrations']
+exclude = ["migrations"]
 
 
 [tool.ruff.lint]
@@ -52,13 +53,17 @@ preview = true
 quote-style = 'single'
 
 
+[tool.mypy]
+exclude = "migrations"
+
+
 [tool.taskipy.tasks]
-run = 'fastapi dev server/main.py'
+run = 'fastapi dev app/main.py'
 lint = 'ruff check . && ruff check . --diff'
 format = 'ruff check . --fix && ruff format .'
 
 pre_test = 'task lint'
-test = 'pytest --cov=server -vv'
+test = 'pytest --cov=tests -vv'
 post_test = 'coverage html'
 
 
