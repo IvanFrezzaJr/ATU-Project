@@ -3,7 +3,6 @@ import Footer from '../components/Footer';
 
 import styles from '../styles/Home.module.css';
 
-import logo from '../assets/logo.svg';
 import zoro from '../assets/404.png';
 
 import { Link } from 'wouter-preact';
