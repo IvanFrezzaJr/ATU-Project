@@ -3,3 +3,6 @@ data
 
 # asdf
 .tool-versions
+
+server/.vscode/
+client/.vscode/
