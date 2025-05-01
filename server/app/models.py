@@ -37,9 +37,9 @@ class User:
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
     name: Mapped[str] = mapped_column(String)
-    image: Mapped[str] = mapped_column(String)
     email: Mapped[str] = mapped_column(String, unique=True)
     password: Mapped[str] = mapped_column(String)
+    image: Mapped[str | None] = mapped_column(String, default=None)
     street: Mapped[str | None] = mapped_column(String, default=None)
     city: Mapped[str | None] = mapped_column(String, default=None)
     state: Mapped[str | None] = mapped_column(String, default=None)
