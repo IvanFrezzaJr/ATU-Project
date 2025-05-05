@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select, func
@@ -14,12 +14,13 @@ from app.schemas import (
     ItemPublic,
     Message,
 )
-from app.security import get_current_user
+from app.security import get_current_user, get_optional_user
 
 router = APIRouter(prefix='/items', tags=['items'])
 
 T_Session = Annotated[Session, Depends(get_session)]
 T_CurrentUser = Annotated[User, Depends(get_current_user)]
+T_OptionalUser = Annotated[Optional[User], Depends(get_optional_user)]
 
 
 @router.post('/', response_model=ItemPublic, status_code=HTTPStatus.CREATED)
@@ -48,16 +49,66 @@ def create_item(
 @router.get('/', response_model=ItemList)
 def read_items(
     session: T_Session,
+    current_user: T_OptionalUser = None,
     limit: int = Query(10, gt=0),
     offset: int = Query(0, ge=0),
+    only_offer_items: Optional[bool] = Query(False),
+    only_user_items: Optional[bool] = Query(False),
 ):
-    total_items = session.scalar(select(func.count()).select_from(UserItem))
-    items = session.scalars(
-        select(UserItem)
-        .options(selectinload(UserItem.user))
-        .limit(limit)
-        .offset(offset)
-    ).all()
+    total_items = 0
+    query = None
+
+    if not current_user:
+        total_items = session.scalar(
+            select(func.count())
+            .select_from(UserItem))
+
+        query = (
+            select(UserItem)
+            .options(selectinload(UserItem.user))
+            .limit(limit)
+            .offset(offset)
+        )
+
+    
+    if current_user and only_user_items:
+        total_items = session.scalar(
+            select(func.count())
+            .where(UserItem.user_id == current_user.id)
+            .select_from(UserItem))
+                
+        query = (
+            select(UserItem)
+            .where(UserItem.user_id == current_user.id)
+            .options(selectinload(UserItem.user))
+            .limit(limit)
+            .offset(offset)
+        )
+
+    
+    if current_user and only_offer_items:
+        total_items = session.scalar(
+            select(func.count())
+            .where(UserItem.user_id != current_user.id)
+            .select_from(UserItem))
+                
+        query = (
+            select(UserItem)
+            .where(UserItem.user_id != current_user.id)
+            .options(selectinload(UserItem.user))
+            .limit(limit)
+            .offset(offset)
+        )
+
+
+    if query  is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Items not found',
+        )
+
+    
+    items = session.scalars(query).all()
 
     return {
         'data': items,
@@ -102,7 +153,7 @@ def update_item(
             detail='Permission denied',
         )
 
-    for field, value in item_data.dict(exclude_unset=True).items():
+    for field, value in item_data.model_dump(exclude_unset=True).items():
         setattr(item, field, value)
 
     session.commit()
