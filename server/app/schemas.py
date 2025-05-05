@@ -1,5 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, ConfigDict, EmailStr
+
+from app.models import ItemStatusEnum, TradeTypeEnum
+
 
 class Message(BaseModel):
     message: str
@@ -35,6 +38,40 @@ class UserPublic(BaseModel):
 
 class UserList(BaseModel):
     users: list[UserPublic]
+
+
+class ItemBase(BaseModel):
+    name: str
+    description: str
+    images_path: List[str]
+    quantity: int = 1
+    status: ItemStatusEnum = ItemStatusEnum.in_offer
+    trade_type: TradeTypeEnum = TradeTypeEnum.post
+
+
+class ItemCreateSchema(ItemBase):
+    pass
+
+
+class ItemUpdateSchema(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    images_path: Optional[List[str]] = None
+    quantity: Optional[int] = None
+    status: Optional[ItemStatusEnum] = None
+    trade_type: Optional[TradeTypeEnum] = None
+
+
+class ItemPublic(ItemBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class ItemList(BaseModel):
+    items: List[ItemPublic]
 
 
 class Token(BaseModel):

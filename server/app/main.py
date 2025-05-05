@@ -3,7 +3,7 @@ from http import HTTPStatus
 from fastapi import FastAPI
 
 
-from app.routers import auth, users
+from app.routers import auth, users, items
 from app.schemas import (
     Message,
 )
@@ -12,6 +12,7 @@ from app.schemas import (
 api = FastAPI()
 
 api.include_router(users.router)
+api.include_router(items.router)
 api.include_router(auth.router)
 
 
