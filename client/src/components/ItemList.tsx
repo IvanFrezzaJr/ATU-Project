@@ -4,6 +4,7 @@ import { UserItemResponse, PaginationResult, ItemDetailFooterSetup } from '../ty
 import {getPaginatedItems} from "../services/itemService";
 import { useEffect, useState } from 'preact/hooks';
 import { PageType } from '../types/page';
+import { useAuth } from '../context/AuthContext';
 
 
 
@@ -18,11 +19,14 @@ const ItemList = (itemListProps: ItemListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
 
+  const { token } = useAuth();
+
+  console.log(token);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const result = await getPaginatedItems(currentPage, itemsPerPage);
+        const result = await getPaginatedItems(currentPage, itemsPerPage, true, token);
         setItems(result.data);
         setPagination(result);
       } catch (error) {

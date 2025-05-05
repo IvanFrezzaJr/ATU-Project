@@ -79,13 +79,26 @@ export const deleteItem = async (id: number): Promise<void> => {
  * @param itemsPerPage - Number of items per page.
  */
 export const getPaginatedItems = async (
-  page: number = 1,
-  itemsPerPage: number = 10
+  page = 1,
+  itemsPerPage = 10,
+  onlyOfferItems = true,
+  token?: string | null,
 ): Promise<PaginationResult<UserItemResponse>> => {
   const offset = (page - 1) * itemsPerPage;
-  const response = await fetch(`${itemsUrl}/?limit=${itemsPerPage}&offset=${offset}`);
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${itemsUrl}/?limit=${itemsPerPage}&offset=${offset}&only_offer_items=${onlyOfferItems}`, {
+    headers,
+  });
+
   if (!response.ok) throw new Error('Error fetching paginated items');
-  
   const data = await response.json();
   return snakeToCamel(data);
 };
