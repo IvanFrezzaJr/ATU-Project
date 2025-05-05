@@ -65,14 +65,25 @@ class ItemUpdateSchema(BaseModel):
 
 class ItemPublic(ItemBase):
     id: int
-    user_id: int
+    user: UserSchema
+    name: str
+    description: str
+    quantity: int
+    status: ItemStatusEnum
+    images_path: List[str]
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
 
 
 class ItemList(BaseModel):
-    items: List[ItemPublic]
+    data: List[ItemPublic]
+    totalItems: int
+    itemsPerPage: int
+    currentPage: int
+    totalPages: int
 
 
 class TradeBase(BaseModel):

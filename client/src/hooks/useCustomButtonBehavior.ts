@@ -13,7 +13,6 @@ export function useCustomButtonBehavior(pageType: PageType, params?: Params): ()
 
   const [, navigate] = useLocation();
 
-  console.log(pageType, params)
 
   switch (pageType) {
     case 'items':

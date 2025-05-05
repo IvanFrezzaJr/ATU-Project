@@ -1,7 +1,7 @@
 import ItemDetailCard from './ItemDetailCard';
 import Pagination from './Pagination';
 import { UserItemResponse, PaginationResult, ItemDetailFooterSetup } from '../types/item';
-import itemService from "../services/itemService";
+import {getPaginatedItems} from "../services/itemService";
 import { useEffect, useState } from 'preact/hooks';
 import { PageType } from '../types/page';
 
@@ -20,11 +20,18 @@ const ItemList = (itemListProps: ItemListProps) => {
 
 
   useEffect(() => {
-    const result = itemService.getPaginated(currentPage, itemsPerPage);
-    setItems(result.data);
-    setPagination(result);
+    const fetchItems = async () => {
+      try {
+        const result = await getPaginatedItems(currentPage, itemsPerPage);
+        setItems(result.data);
+        setPagination(result);
+      } catch (error) {
+        console.error('Erro ao buscar itens:', error);
+      }
+    };
+  
+    fetchItems();
   }, [currentPage, itemsPerPage]);
-
 
 
 

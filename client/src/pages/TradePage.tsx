@@ -8,7 +8,7 @@ import { useLocation } from 'wouter-preact';
 import style from '../styles/ItemDetail.module.css';
 import ItemDetailCard from '../components/ItemDetailCard';
 
-import itemService from '../services/itemService';
+import {getItemById} from '../services/itemService';
 import { useEffect, useState } from 'preact/hooks';
 
 import { useParams } from 'wouter-preact';
@@ -37,32 +37,35 @@ const TradePage = () => {
 
 
     useEffect(() => {
+        const fetchItem = async () => {
+            try {
+                if (params) {
+                    const itemIdParam = params[0];
+                    const offerItemIdParam = params[1];
 
-        if (params) {
-            console.log(params);
-            const itemIdParam = params[0];
-            const offerItemIdParam = params[1];
+                    if (itemIdParam) {
+                        const itemId = parseInt(itemIdParam, 10);
+                        const result = await getItemById(itemId);
 
-            console.log(itemIdParam);
-            console.log(offerItemIdParam);
+                        if (result) {
+                            setItem(result);
+                        }
+                    }
 
-            if (itemIdParam) {
-                const itemId = parseInt(itemIdParam, 10);
-                const result = itemService.getById(itemId);
-
-                if (result) {
-                    setItem(result);
+                    if (offerItemIdParam) {
+                        const oitemId = parseInt(offerItemIdParam, 10);
+                        const offerResult = await  getItemById(oitemId);
+                        if (offerResult) {
+                            setOffetItem(offerResult);
+                        }
+                    }
                 }
-            }
-
-            if (offerItemIdParam) {
-                const oitemId = parseInt(offerItemIdParam, 10);
-                const offerResult = itemService.getById(oitemId);
-                if (offerResult) {
-                    setOffetItem(offerResult);
-                }
+            } catch (error) {
+                console.error('Erro ao buscar itens:', error);
             }
         }
+
+        fetchItem();
     }, [params]);
 
 

@@ -7,7 +7,7 @@ import ItemList from '../components/ItemList';
 import style from '../styles/ItemDetail.module.css';
 import ItemDetailCard from '../components/ItemDetailCard';
 
-import itemService from '../services/itemService';
+import {getItemById} from '../services/itemService';
 import { useEffect, useState } from 'preact/hooks';
 
 import { useParams } from 'wouter-preact';
@@ -22,18 +22,26 @@ const OfferListPage = () => {
 
 
     useEffect(() => {
-        if (params) {
-            const itemIdParam = params[0]
-            if (itemIdParam) {
-                const itemId = parseInt(itemIdParam, 10);
-                const result = itemService.getById(itemId);
 
-                if (result) {
-                    setItem(result);
-                    
+        const fetchItem = async () => {
+            try {
+                if (params) {
+                    const itemIdParam = params[0]
+                    if (itemIdParam) {
+                        const itemId = parseInt(itemIdParam, 10);
+                        const result = await getItemById(itemId);
+        
+                        if (result) {
+                            setItem(result);
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error('Erro ao buscar itens:', error);
             }
         }
+
+        fetchItem();
     }, [params]);
 
 
