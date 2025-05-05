@@ -11,22 +11,33 @@ interface UserLogin {
  
 
 
-const apiUrl = import.meta.env.VITE_API_URL + "/auth/";
+const apiUrl = import.meta.env.VITE_API_URL
+const authUrl = `${apiUrl}/auth`;
+const userUrl = `${apiUrl}/users`;
 
 
 export const login = async (email: string, password: string): Promise<UserLogin> => {
-  const response = await fetch(`${apiUrl}login`, {
+
+  const formData = new URLSearchParams();
+  formData.append('username', email); 
+  formData.append('password', password);
+
+  const response = await fetch(`${authUrl}/token`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: formData.toString(),
   });
 
-  if (!response.ok) throw new Error('Error logging in');
-  return await response.json();
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Error logging in');
+  }
+
+  return await response.json(); 
 };
 
 export const logout = async () => {
-  const response = await fetch(`${apiUrl}logout`, {
+  const response = await fetch(`${authUrl}/logout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' }
   });
@@ -34,8 +45,8 @@ export const logout = async () => {
   if (!response.ok) throw new Error('Erro logout');
 };
 
-export const getCurrentUser = async () => {
-  const response = await fetch(`${apiUrl}user`, {
+export const getCurrentUser = async (userId: string) => {
+  const response = await fetch(`${userUrl}/${userId}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });
@@ -46,7 +57,7 @@ export const getCurrentUser = async () => {
 
 
 export const registerUser = async (name: string, email: string, password: string): Promise<UserUpdate> => {
-  const response = await fetch(`${apiUrl}register`, {
+  const response = await fetch(`${userUrl}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
@@ -58,12 +69,24 @@ export const registerUser = async (name: string, email: string, password: string
 
 
 export const updateUser = async (userId: string, updates: Partial<UserUpdate>): Promise<UserUpdate> => {
-  const response = await fetch(`${apiUrl}user/${userId}`, {
+  const response = await fetch(`${userUrl}/${userId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates)
   });
 
   if (!response.ok) throw new Error('Error updating user');
+  return await response.json();
+};
+
+
+export const fetchUser = async (token: string) => {
+  const response = await fetch(`${authUrl}/users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to fetch user');
   return await response.json();
 };

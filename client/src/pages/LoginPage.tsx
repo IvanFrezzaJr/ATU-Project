@@ -1,8 +1,9 @@
 import { useState } from "preact/hooks";
 import { Link, useLocation } from "wouter-preact";
-import { login } from "../services/authService";
+import { login as loginService } from "../services/authService";
 import Message from "../components/Message";
 import styles from '../styles/Auth.module.css';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,13 +11,16 @@ const LoginPage = () => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [, navigate] = useLocation();
+  const { login } = useAuth();
+
 
   const handleLogin = async (e: Event) => {
     e.preventDefault(); 
 
     try {
-      const user = await login(email, password);
+      const user = await loginService(email, password);
       console.log("Authenticated user:", user);
+      await login(email, password);
       navigate("/"); 
     } catch (error) {
       console.error("Error logging:", error);
