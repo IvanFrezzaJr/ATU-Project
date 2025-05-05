@@ -1,7 +1,8 @@
+from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models import ItemStatusEnum, TradeTypeEnum
+from app.models import ItemStatusEnum, TradeTypeEnum, TradeStatusEnum
 
 
 class Message(BaseModel):
@@ -72,6 +73,36 @@ class ItemPublic(ItemBase):
 
 class ItemList(BaseModel):
     items: List[ItemPublic]
+
+
+class TradeBase(BaseModel):
+    user_item_id_from: int
+    user_item_id_to: int
+    trade_date: datetime
+    trade_status: TradeStatusEnum = TradeStatusEnum.opened
+
+
+class TradeCreateSchema(BaseModel):
+    user_item_id_from: int
+    user_item_id_to: int
+    trade_status: TradeStatusEnum = TradeStatusEnum.opened
+    
+
+class TradeUpdateSchema(BaseModel):
+    trade_status: Optional[TradeStatusEnum] = None
+
+
+class TradePublic(TradeBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class TradeList(BaseModel):
+    trades: List[TradePublic]
+
+
 
 
 class Token(BaseModel):
