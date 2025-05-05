@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { Grid } from "../components/Grid";
-import itemService from "../services/itemService";
+import { getPaginatedItems } from "../services/itemService";
 import { PaginationResult, UserItemResponse } from "../types/item";
 
 const ItemPage = () => {
@@ -9,11 +9,19 @@ const ItemPage = () => {
     const [currentPage, ] = useState(1);
     const itemsPerPage = 2;
 
-  useEffect(() => {
-    const result = itemService.getPaginated(currentPage, itemsPerPage);
-    setItems(result.data);
-    setPagination(result);
-  }, [currentPage, itemsPerPage]);
+    useEffect(() => {
+      const fetchItems = async () => {
+        try {
+          const result = await getPaginatedItems(currentPage, itemsPerPage);
+          setItems(result.data);
+          setPagination(result);
+        } catch (error) {
+          console.error('Erro ao buscar itens:', error);
+        }
+      };
+    
+      fetchItems();
+    }, [currentPage, itemsPerPage]);
 
   return (
     <>

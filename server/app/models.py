@@ -4,7 +4,7 @@ from typing import List
 
 from sqlalchemy import TIMESTAMP, ForeignKey, Integer, String, func
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM
-from sqlalchemy.orm import Mapped, mapped_column, registry
+from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
 
 table_registry = registry()
 
@@ -62,6 +62,8 @@ class UserItem:
     name: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
+    user: Mapped["User"] = relationship()
+
     images_path: Mapped[List[str]] = mapped_column(ARRAY(String))
     quantity: Mapped[int] = mapped_column(Integer, default=1)
 

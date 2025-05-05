@@ -86,7 +86,7 @@ const ItemDetailCard = (itemDetailProps: ItemDetailProps) => {
                         </div>
                         <div className={styles['user-info-text']}>
                             <small><strong>{itemDetailProps.userName}</strong></small>
-                            <small>Posted on: {itemDetailProps.postDate.toLocaleDateString()}</small>
+                            <small>Posted on: {itemDetailProps.postDate}</small>
                         </div>
                     </div>
                 }

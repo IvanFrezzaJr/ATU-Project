@@ -1,9 +1,9 @@
 from http import HTTPStatus
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select, func
+from sqlalchemy.orm import Session, selectinload
 
 from app.database import get_session
 from app.models import UserItem, User
@@ -46,11 +46,26 @@ def create_item(
 
 
 @router.get('/', response_model=ItemList)
-def read_items(session: T_Session, limit: int = 10, offset: int = 0):
+def read_items(
+    session: T_Session,
+    limit: int = Query(10, gt=0),
+    offset: int = Query(0, ge=0),
+):
+    total_items = session.scalar(select(func.count()).select_from(UserItem))
     items = session.scalars(
-        select(UserItem).limit(limit).offset(offset)
+        select(UserItem)
+        .options(selectinload(UserItem.user))
+        .limit(limit)
+        .offset(offset)
     ).all()
-    return {'items': items}
+
+    return {
+        'data': items,
+        'totalItems': total_items,
+        'itemsPerPage': limit,
+        'currentPage': (offset // limit) + 1,
+        'totalPages': (total_items + limit - 1) // limit,
+    }
 
 
 @router.get('/{item_id}', response_model=ItemPublic)
