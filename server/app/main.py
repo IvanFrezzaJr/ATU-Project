@@ -7,9 +7,12 @@ from app.routers import auth, users, items, trades
 from app.schemas import (
     Message,
 )
+from app.middlewares.cors import setup_cors
 
 
 api = FastAPI()
+
+setup_cors(api)
 
 api.include_router(users.router)
 api.include_router(items.router)

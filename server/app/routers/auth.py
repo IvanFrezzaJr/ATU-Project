@@ -10,6 +10,7 @@ from app.database import get_session
 from app.models import User
 from app.schemas import (
     Token,
+    UserPublic,
 )
 from app.security import (
     create_access_token,
@@ -54,3 +55,8 @@ def refresh_access_token(
     new_access_token = create_access_token(data={'sub': user.email})
 
     return {'access_token': new_access_token, 'token_type': 'bearer'}
+
+
+@router.get('/users/me', response_model=UserPublic)
+def get_current_user_data(user: User = Depends(get_current_user)):
+    return user

@@ -28,3 +28,35 @@ apply migration
 ```bash
 alembic upgrade head
 ```
+
+
+## debug
+### vscode
+```bash
+export BUILD_TARGET=debug
+docker-compose up -d
+```
+
+launch.json
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Python: Remote Attach (FastAPI)",
+        "type": "debugpy",
+        "request": "attach",
+        "connect": {
+          "host": "localhost",
+          "port": 5678
+        },
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}/server",
+            "remoteRoot": "/app"
+          }
+        ]
+      }
+    ]
+  }
+```

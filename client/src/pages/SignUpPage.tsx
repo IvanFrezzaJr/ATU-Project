@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import { Link, useLocation } from "wouter-preact";
 import { registerUser } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import Message from "../components/Message";
 import styles from '../styles/Auth.module.css';
 
@@ -12,6 +13,7 @@ const SignUpPage = () => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [, navigate] = useLocation();
+  const { login } = useAuth();
 
   const handleSignUp = async (e: Event) => {
     e.preventDefault(); 
@@ -19,7 +21,8 @@ const SignUpPage = () => {
     try {
       const user = await registerUser(name, email, password);
       console.log("Authenticated user:", user);
-      navigate("/"); 
+      login({ name, profilePic: "https://placehold.co/40x40", email });
+      navigate("/");
     } catch (error) {
       console.error("Error signup:", error);
       setErrorMessage("Failed to authenticate. Please check your credentials.");

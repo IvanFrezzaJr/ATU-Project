@@ -4,10 +4,12 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-prod}
     volumes:
       - ./server:/app
     ports:
       - "5000:8000"
+      - "5678:5678"
     environment:
       - PYTHONUNBUFFERED=1
     networks:
