@@ -51,3 +51,22 @@ export interface PaginationResult<ItemResponsePaginated> {
     totalItems: number;
     itemsPerPage: number;
   }
+
+
+
+
+export enum TradeType {
+    post = "post",
+    delivery = "delivery",
+    pickup = "pickup"
+}
+
+export interface UserItemRequest {
+  name: string;
+  description: string;
+  userId: number;
+  imagesPath: string[];
+  quantity: number;
+  status: ItemStatus;
+  tradeType: TradeType;
+}
