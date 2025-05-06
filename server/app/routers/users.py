@@ -13,6 +13,7 @@ from app.schemas import (
     UserList,
     UserPublic,
     UserSchema,
+    UserUpdateSchema,
 )
 from app.security import (
     get_current_user,
@@ -83,7 +84,7 @@ def read_user(user_id: int, session: T_Session):
 @router.put('/{user_id}', response_model=UserPublic)
 def update_user(
     user_id: int,
-    user: UserSchema,
+    user: UserUpdateSchema,
     session: T_Session,
     current_user: T_CurrentUser,
 ):
@@ -94,9 +95,15 @@ def update_user(
         )
 
     try:
-        current_user.name = user.name
-        current_user.password = get_password_hash(user.password)
-        current_user.email = user.email
+        updates = user.model_dump(exclude_unset=True) 
+
+
+        for field, value in updates.items():
+            if field == 'password':
+                setattr(current_user, field, get_password_hash(value))
+            else:
+                setattr(current_user, field, value)
+
         session.commit()
         session.refresh(current_user)
 

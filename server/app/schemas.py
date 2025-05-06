@@ -26,15 +26,35 @@ class UserSchema(BaseModel):
     anddress: Optional[AddressSchema] = None
 
 
+class UserUpdateSchema(BaseModel):
+    name: Optional[str] = None
+    password: Optional[str] = None
+    email: Optional[str] = None
+    image: Optional[str] = None
+    street: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    postalcode: Optional[str] = None
+    country: Optional[str] = None
+
 
 class UserPublic(BaseModel):
     id: int
     name: str
     email: str
+
+    image: Optional[str] = None
+    street: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    postalcode: Optional[str] = None
+    country: Optional[str] = None
+
     # ensure UserPublic.model_validate(...).model_dump()
     # valdiates only by schema attributes:
     # id, username and email
     model_config = ConfigDict(from_attributes=True)
+
 
 
 class UserList(BaseModel):

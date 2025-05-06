@@ -3,11 +3,23 @@ import ItemPage from './ItemPage';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../styles/Admin.module.css';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
+import { useAuth } from '../context/AuthContext';
+import { useLocation } from 'wouter-preact';
 
 
 const AdminPage = () => {
     const [page, setPage] = useState('profile');
+    const [, setLocation] = useLocation();
+
+    const { token } = useAuth();
+
+
+    useEffect(() => {
+    if (!token) {
+        setLocation('/');
+    }
+    }, [token]);
 
     const renderPage = () => {
         switch (page) {

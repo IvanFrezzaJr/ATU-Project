@@ -4,13 +4,18 @@ import { getCurrentUser, updateUser } from "../services/authService";
 import { searchAddress } from "../services/addressService";
 import Message from "../components/Message";
 import styles from '../styles/Auth.module.css';
+import { useAuth } from "../context/AuthContext";
+import { UserUpdate } from "../types/user";
+import { uploadImage } from "../services/itemService";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const ProfilePage = () => {
     // user  
     const [userId, setUserId] = useState<string | null>(null);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [profilePic, setProfilePic] = useState("");
+    const [image, setImage] = useState("");
     const [password, setPassword] = useState("");
 
     // address
@@ -26,23 +31,31 @@ const ProfilePage = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [, navigate] = useLocation();
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const user = await getCurrentUser();
-                setUserId(user.id);
-                setName(user.name);
-                setEmail(user.email);
-                setProfilePic(user.profilePic);
-            } catch (error) {
-                console.error("Error fetching user:", error);
-                // setErrorMessage("Failed to load user data.");
-                // setShowError(true);
-            }
-        };
-        fetchUser();
-    }, []);
 
+    const { user, token } = useAuth();
+
+    useEffect(() => {
+
+        if (!user) return;
+
+        const fetchUser = async () => {
+            const currentUser = await getCurrentUser(user.id);
+
+            setUserId(currentUser.id); 
+            setName(currentUser.name);
+            setEmail(currentUser.email);
+            setImage(currentUser.image ?? "");
+            setStreet(currentUser.street ?? "");
+            setCity(currentUser.city ?? "");
+            setState(currentUser.state ?? "");
+            setPostalcode(currentUser.postalcode ?? "");
+            setCountry(currentUser.country?? "");
+        }
+
+        fetchUser();
+
+        
+      }, [user]);
 
     const handleSearchAddress = async (e: Event) => {
         e.preventDefault();
@@ -56,8 +69,6 @@ const ProfilePage = () => {
             if (!address) {
                 return;
             }
-
-            console.log(address);
 
             setStreet(address.street);
             setCity(address.city);
@@ -75,10 +86,28 @@ const ProfilePage = () => {
 
     const handleUpdate = async (e: Event) => {
         e.preventDefault();
-        if (!userId) return;
+
+
+        if ((!userId) || (!token)){
+            console.error("User not authenticated");
+            navigate("/login"); 
+            return;
+        }
 
         try {
-            const updatedUser = await updateUser(userId, { name, email, profilePic });
+            const payload: UserUpdate = {
+                name,
+                email,
+                image: image || undefined,
+                password: password || undefined,
+                street: street || undefined,
+                city: city || undefined,
+                state: state || undefined,
+                postalcode: postalcode || undefined,
+                country: country || undefined,
+            };
+
+            const updatedUser = await updateUser(userId, payload, token);
             console.log("Updated user:", updatedUser);
             navigate("/");
         } catch (error) {
@@ -87,6 +116,17 @@ const ProfilePage = () => {
             setShowError(true);
         }
     };
+
+    const handleImageUpload = async (file: File) => {
+        try {
+          const imagePath = await uploadImage(file);
+          setImage(imagePath);
+        } catch (err) {
+          console.error("Failed to upload image:", err);
+        }
+      };
+      
+    
 
 
     return (
@@ -129,7 +169,7 @@ const ProfilePage = () => {
                         />
 
                         <label for="file">User Image
-                            <input
+                        <input
                                 type="file"
                                 id="file"
                                 name="file"
@@ -137,13 +177,15 @@ const ProfilePage = () => {
                                 onChange={(e) => {
                                     const file = (e.target as HTMLInputElement).files?.[0];
                                     if (file) {
-                                        setProfilePic(URL.createObjectURL(file));
+                                        // setImageGallery(URL.createObjectURL(file));
+                                        handleImageUpload(file);
                                     }
-                                }} />
+                                }}
+                            />
                         </label>
 
                         <div id="gallery">
-                            {profilePic && <img src={profilePic} alt="Profile Preview" width="100" />}
+                            {image && <img src={`${apiUrl}${image}`} alt="Profile Preview" width="100" />}
                         </div>
 
                         <h2 class={styles.center}>Addresses</h2>
@@ -157,6 +199,7 @@ const ProfilePage = () => {
                                     placeholder="Search for your address ..."
                                     aria-label="Street"
                                     autoComplete="Street"
+                                    value={street ?? ""}
                                     required
                                     onChange={(e) => setStreet((e.target as HTMLInputElement).value)}
                                 />

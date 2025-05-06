@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { useParams } from 'wouter-preact';
+import { useParams, useLocation } from 'wouter-preact';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -14,13 +14,22 @@ import { useAuth } from '../context/AuthContext';
 
 const OfferListPage = () => {
   const params = useParams();
+  const [, setLocation] = useLocation();
   const [item, setItem] = useState<UserItemResponse | null>(null);
   const [items, setItems] = useState<UserItemResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 2;
+  
 
   const { token } = useAuth();
+
+
+  useEffect(() => {
+    if (!token) {
+      setLocation('/');
+    }
+  }, [token]);
 
   useEffect(() => {
     const fetchItem = async () => {
