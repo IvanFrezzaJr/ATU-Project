@@ -103,7 +103,6 @@ export const getPaginatedItems = async ({
     'Content-Type': 'application/json',
   };
 
-  console.log(token);
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -124,4 +123,22 @@ export const getPaginatedItems = async ({
   if (!response.ok) throw new Error('Error fetching paginated items');
   const data = await response.json();
   return snakeToCamel(data);
+};
+
+
+
+
+export const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${itemsUrl}/upload-image`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) throw new Error('Error uploading image');
+
+  const data = await response.json();
+  return data.path; // Ex: "/uploads/uuid123.png"
 };

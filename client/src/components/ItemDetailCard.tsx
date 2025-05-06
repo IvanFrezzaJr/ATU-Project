@@ -3,6 +3,8 @@ import { ItemDetailFooterSetup } from "../types/item";
 import { PageType } from "../types/page";
 import { useLocation } from "wouter-preact";
 import { useCallback } from "react";
+import itemPlaceholder from '../assets/logo.svg';
+
 
 type ButtonActionType = "navigate" | "alert" | "custom";
 
@@ -98,7 +100,8 @@ const ItemDetailCard = ({
             {/* Item main info */}
             <div className={styles["item-info"]}>
                 <div>
-                    <img src={productImage} alt="Product Image" />
+                    <img src={productImage || itemPlaceholder} alt="Product Image" />
+
                 </div>
                 <div>
                     <div>

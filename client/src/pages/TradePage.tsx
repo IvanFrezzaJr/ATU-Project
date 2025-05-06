@@ -13,6 +13,8 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { useParams } from 'wouter-preact';
 import { UserItemResponse } from '../types/item';
+import { createTrade } from '../services/tradeService';
+import { useAuth } from '../context/AuthContext';
 
 
 const DeliveryDetail = () => {
@@ -31,9 +33,18 @@ const DeliveryDetail = () => {
 
 const TradePage = () => {
     const params = useParams();
+    const [, setLocation] = useLocation();
     const [item, setItem] = useState<UserItemResponse | null>(null);
     const [offerItem, setOffetItem] = useState<UserItemResponse | null>(null);
     const [, navigate] = useLocation(); 
+    
+    const { token } = useAuth();
+
+    useEffect(() => {
+        if (!token) {
+          setLocation('/');
+        }
+      }, [token]);
 
 
     useEffect(() => {
@@ -69,13 +80,24 @@ const TradePage = () => {
     }, [params]);
 
 
-    const handleSubmit = (e: Event) => {
+    const handleSubmit = async (e: Event) => {
         e.preventDefault();
+        
+        if (!item || !offerItem) return;
+
+        try {
+            await createTrade({
+                userItemIdFrom: offerItem.id,
+                userItemIdTo: item.id,
+                tradeStatus: 'pending',
+            });
     
-        // Aqui você pode fazer o processamento do formulário
-    
-        // Após o processamento, navega para outra página
-        navigate('/confirm');
+            navigate('/confirm');
+        } catch (error) {
+            console.error('Erro ao criar troca:', error);
+            alert('Erro ao criar troca. Tente novamente.');
+        }
+
       };
 
 

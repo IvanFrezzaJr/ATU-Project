@@ -3,6 +3,8 @@ import profilePlaceholder from '../assets/profile-placeholder.png';
 import { Link, useLocation } from 'wouter-preact';
 import { useAuth } from '../context/AuthContext';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const Header = () => {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
@@ -39,9 +41,10 @@ const Header = () => {
               </li>
               <li className="profile">
                 <Link href="/admin">
-                  <img src={user.profilePic || profilePlaceholder} alt="User admin" />
+                  <img src={`${apiUrl}${user.image}` || profilePlaceholder} width="40" height="40" alt="User admin" />
                 </Link>
               </li>
+              
             </>
           ) : (
             <>
@@ -55,11 +58,7 @@ const Header = () => {
                   Sign in
                 </button>
               </li>
-              <li className="profile">
-                <Link href="/admin">
-                  <img src={profilePlaceholder} alt="Default admin" />
-                </Link>
-              </li>
+             
             </>
           )}
 

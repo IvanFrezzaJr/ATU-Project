@@ -1,5 +1,10 @@
 from http import HTTPStatus
 from typing import Annotated, Optional
+from uuid import uuid4
+
+from fastapi import UploadFile, File
+from pathlib import Path
+import shutil
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select, func
@@ -186,3 +191,20 @@ def delete_item(
     session.commit()
 
     return {'message': 'Item deleted'}
+
+
+
+UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
+
+@router.post("/upload-image")
+def upload_image(file: UploadFile = File(...)):
+    file_ext = Path(file.filename).suffix
+    filename = f"{uuid4()}{file_ext}"
+    filepath = UPLOAD_DIR / filename
+
+    with filepath.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # Retorna apenas o path relativo
+    return {"path": f"/uploads/{filename}"}

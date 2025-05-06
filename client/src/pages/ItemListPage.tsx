@@ -22,7 +22,19 @@ const ItemListPage = () => {
     if (isLoading) return; 
 
     if (!token) {
-      window.location.href = '/login'; 
+      const fetchItems = async () => {
+        try {
+          const result = await getPaginatedItems({
+            page: currentPage,
+            itemsPerPage,
+          });
+          setItems(result.data);
+          setTotalPages(result.totalPages);
+        } catch (error) {
+          console.error('Erro ao buscar itens:', error);
+        }
+      };
+      fetchItems();
     }
   }, [isLoading, token]);
 

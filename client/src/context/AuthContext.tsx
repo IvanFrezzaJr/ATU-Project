@@ -5,9 +5,10 @@ import { fetchUser as fetchUserService } from "../services/authService";
 const TOKEN_KEY = 'auth_token';
 
 interface AuthUser {
+  id: string;
   name: string;
   email: string;
-  profilePic?: string;
+  image?: string;
 }
 
 interface AuthContextType {
@@ -70,9 +71,10 @@ export const AuthProvider = ({ children }: { children: preact.ComponentChildren 
     try {
       const userData = await fetchUserService(token);
       setUser({
+        id: userData.id,
         name: userData.name,
         email: userData.email,
-        profilePic: userData.profilePic || '',
+        image: userData.image || '',
       });
     } catch (error) {
       console.error('Error fetching user:', error);

@@ -2,6 +2,9 @@ import ItemDetailCard from './ItemDetailCard';
 import Pagination from './Pagination';
 import { UserItemResponse, ItemDetailFooterSetup } from '../types/item';
 import { PageType } from '../types/page';
+import { useAuth } from '../context/AuthContext';
+
+
 
 interface ItemListProps {
   items: UserItemResponse[];
@@ -13,9 +16,12 @@ interface ItemListProps {
 }
 
 const ItemList = ({ items, currentPage, totalPages, onPageChange, page, item }: ItemListProps) => {
+
+  const { token } = useAuth();
+
   const itemDetailFooterSetup: ItemDetailFooterSetup = {
     userInfo: { show: true },
-    actionMenu: { show: true },
+    actionMenu: { show: token ? true : false  },
     page,
     item,
   };

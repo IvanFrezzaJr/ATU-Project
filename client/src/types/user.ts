@@ -2,9 +2,9 @@
 export interface User {
     id: number;
     name: string;
-    image: string;
     email: string;
     password: string;
+    image: string;
     street: string;
     city: string;
     state: string;
@@ -13,3 +13,22 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
 }
+
+
+export interface UserLogin {
+    name: string;
+    profilePic: string;
+  }
+
+export interface UserUpdate {
+    name?: string;
+    email?: string;
+    password?: string;
+    image?: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    postalcode?: string;
+    country?: string;
+}
+ 

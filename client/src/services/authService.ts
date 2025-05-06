@@ -1,14 +1,5 @@
-interface UserLogin {
-    name: string;
-    profilePic: string;
-  }
-
-  interface UserUpdate {
-    name?: string;
-    email?: string;
-    profilePic?: string;
-  }
- 
+import { camelToSnake } from "../utils/caseConverters";
+import {UserLogin, UserUpdate} from "../types/user";
 
 
 const apiUrl = import.meta.env.VITE_API_URL
@@ -68,11 +59,14 @@ export const registerUser = async (name: string, email: string, password: string
 };
 
 
-export const updateUser = async (userId: string, updates: Partial<UserUpdate>): Promise<UserUpdate> => {
+export const updateUser = async (userId: string, updates: Partial<UserUpdate>, token: string): Promise<UserUpdate> => {
   const response = await fetch(`${userUrl}/${userId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization':  `Bearer ${token}`
+      },
+      body: JSON.stringify(camelToSnake(updates))
   });
 
   if (!response.ok) throw new Error('Error updating user');
