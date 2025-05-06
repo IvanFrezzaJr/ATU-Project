@@ -21,7 +21,7 @@ const SignUpPage = () => {
     try {
       const user = await registerUser(name, email, password);
       console.log("Authenticated user:", user);
-      login({ name, profilePic: "https://placehold.co/40x40", email });
+      login(email, password);
       navigate("/");
     } catch (error) {
       console.error("Error signup:", error);

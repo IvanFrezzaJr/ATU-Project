@@ -34,7 +34,7 @@ alembic upgrade head
 ### vscode
 ```bash
 export BUILD_TARGET=debug
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 launch.json
