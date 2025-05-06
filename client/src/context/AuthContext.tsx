@@ -13,6 +13,7 @@ interface AuthUser {
 interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -22,13 +23,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: preact.ComponentChildren }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
 
   // Load token from storage and fetch user
   useEffect(() => {
     const savedToken = localStorage.getItem(TOKEN_KEY);
     if (savedToken) {
       setToken(savedToken);
-      fetchUser(savedToken); // fetch user details using token
+      fetchUser(savedToken).finally(() => setIsLoading(false)); // Depois de carregar o usuário, termina o carregamento
+    } else {
+      setIsLoading(false); // Se não houver token, termina o carregamento
     }
   }, []);
 
@@ -65,7 +69,6 @@ export const AuthProvider = ({ children }: { children: preact.ComponentChildren 
   const fetchUser = async (token: string) => {
     try {
       const userData = await fetchUserService(token);
-
       setUser({
         name: userData.name,
         email: userData.email,
@@ -77,8 +80,12 @@ export const AuthProvider = ({ children }: { children: preact.ComponentChildren 
     }
   };
 
+  if (isLoading) {
+    return null; // Retorna null enquanto está carregando ou exibe um carregando...
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

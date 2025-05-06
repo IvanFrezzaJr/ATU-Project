@@ -1,34 +1,71 @@
-
+import { useEffect, useState } from 'preact/hooks';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
 import ItemList from '../components/ItemList';
-
 import style from '../styles/ItemDetail.module.css';
 
+import { getPaginatedItems } from '../services/itemService';
 import { PageType } from '../types/page';
-
-
+import { UserItemResponse } from '../types/item';
+import { useAuth } from '../context/AuthContext';
 
 const ItemListPage = () => {
+  const [items, setItems] = useState<UserItemResponse[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 2;
 
-    return (
-        <>
-            <Header />
-                <main>
-                    <div class="viewport">
-                        <div className={style["content"]}>
+  const { token, isLoading } = useAuth();
 
-                            <h1 class="center">Offer List</h1>
 
-                            <ItemList page={PageType.Items} />
+  useEffect(() => {
+    if (isLoading) return; 
 
-                        </div>
-                    </div>
-                </main>
-            <Footer />
-        </>
-    );
+    if (!token) {
+      window.location.href = '/login'; 
+    }
+  }, [isLoading, token]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchItems = async () => {
+      try {
+        const result = await getPaginatedItems({
+          page: currentPage,
+          onlyOfferItems: true,
+          itemsPerPage,
+          token,
+        });
+        setItems(result.data);
+        setTotalPages(result.totalPages);
+      } catch (error) {
+        console.error('Erro ao buscar itens:', error);
+      }
+    };
+    fetchItems();
+  }, [currentPage]);
+
+  return (
+    <>
+      <Header />
+      <main>
+        <div class="viewport">
+          <div className={style.content}>
+            <h1 class="center">Offer List</h1>
+            <ItemList
+              items={items}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              page={PageType.Items}
+            />
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
+  );
 };
 
 export default ItemListPage;
