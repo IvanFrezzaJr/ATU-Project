@@ -1,4 +1,4 @@
-import { UserItemResponse, PaginationResult } from '../types/item';
+import { UserItemResponse, PaginationResult, UserItemRequest } from '../types/item';
 import { snakeToCamel } from '../utils/caseConverters';
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -41,11 +41,16 @@ export const getItemById = async (id: number): Promise<UserItemResponse> => {
  * @param item - Data of the item to be created.
  */
 export const createItem = async (
-  item: Omit<UserItemResponse, 'id' | 'createdAt' | 'updatedAt'>
+  item: Omit<UserItemRequest, 'id' | 'createdAt' | 'updatedAt'>,
+  token: string
 ): Promise<UserItemResponse> => {
   const response = await fetch(itemsUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+
     body: JSON.stringify(item),
   });
 
@@ -60,11 +65,17 @@ export const createItem = async (
  */
 export const updateItem = async (
   id: number,
-  updatedItem: Partial<Omit<UserItemResponse, 'id'>>
+  updatedItem: Partial<Omit<UserItemRequest, 'id'>>,
+  token: string
 ): Promise<UserItemResponse> => {
+
   const response = await fetch(`${itemsUrl}/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+
     body: JSON.stringify(updatedItem),
   });
 
