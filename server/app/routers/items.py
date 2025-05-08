@@ -11,7 +11,7 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import Session, selectinload
 
 from app.database import get_session
-from app.models import UserItem, User
+from app.models import ItemStatusEnum, UserItem, User
 from app.schemas import (
     ItemCreateSchema,
     ItemUpdateSchema,
@@ -20,6 +20,10 @@ from app.schemas import (
     Message,
 )
 from app.security import get_current_user, get_optional_user
+
+
+UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 router = APIRouter(prefix='/items', tags=['items'])
 
@@ -54,56 +58,46 @@ def create_item(
 @router.get('/', response_model=ItemList)
 def read_items(
     session: T_Session,
-    current_user: T_OptionalUser = None,
     limit: int = Query(10, gt=0),
     offset: int = Query(0, ge=0),
-    only_offer_items: Optional[bool] = Query(False),
-    only_user_items: Optional[bool] = Query(False),
+    item_status: ItemStatusEnum = Query(None),
+    user_id: Optional[int] = Query(None),
 ):
+
     total_items = 0
     query = None
 
+    base_query = select(UserItem).options(selectinload(UserItem.user))
 
-    if current_user and only_user_items:
-        total_items = session.scalar(
-            select(func.count())
-            .where(UserItem.user_id == current_user.id)
-            .select_from(UserItem))
-                
-        query = (
-            select(UserItem)
-            .where(UserItem.user_id == current_user.id)
-            .options(selectinload(UserItem.user))
-            .limit(limit)
-            .offset(offset)
-        )
+    # add conditions
+    conditions = []
 
-    
-    elif current_user and only_offer_items:
-        total_items = session.scalar(
-            select(func.count())
-            .where(UserItem.user_id != current_user.id)
-            .select_from(UserItem))
-                
-        query = (
-            select(UserItem)
-            .where(UserItem.user_id != current_user.id)
-            .options(selectinload(UserItem.user))
-            .limit(limit)
-            .offset(offset)
-        )
+    if item_status == ItemStatusEnum.in_offer:
+        conditions.append(UserItem.status == ItemStatusEnum.in_offer)
+
+    if item_status == ItemStatusEnum.not_listed:
+        conditions.append(UserItem.status == ItemStatusEnum.not_listed)
+
+    if item_status == ItemStatusEnum.offer_agreed:
+        conditions.append(UserItem.status == ItemStatusEnum.offer_agreed)
+
+    if user_id:
+        conditions.append(UserItem.user_id == user_id)
         
-    else:
-        total_items = session.scalar(
-            select(func.count())
-            .select_from(UserItem))
 
-        query = (
-            select(UserItem)
-            .options(selectinload(UserItem.user))
-            .limit(limit)
-            .offset(offset)
-        )
+    # Apply filters
+    if conditions:
+        base_query = base_query.where(*conditions)
+
+    # pagination
+    query = base_query.limit(limit).offset(offset)
+
+    # aggregation
+    count_query = select(func.count()).select_from(UserItem)
+    if conditions:
+        count_query = count_query.where(*conditions)
+
+    total_items = session.scalar(count_query)
 
     if query  is None:
         raise HTTPException(
@@ -192,10 +186,6 @@ def delete_item(
 
     return {'message': 'Item deleted'}
 
-
-
-UPLOAD_DIR = Path("uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
 
 @router.post("/upload-image")
 def upload_image(file: UploadFile = File(...)):

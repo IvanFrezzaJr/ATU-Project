@@ -16,16 +16,24 @@ import { UserItemResponse } from '../types/item';
 import { createTrade } from '../services/tradeService';
 import { useAuth } from '../context/AuthContext';
 
+interface Address{
+    street: string;
+    city: string;
+    state: string;
+    postalcode: string;
+    country: string;
+}
 
-const DeliveryDetail = () => {
+const DeliveryDetail = ({street, city, state, postalcode, country} : Address) => {
     return (
         <>
             <h3 class="center">Trade Details</h3>
             <div class="trade-info">
-                <fieldset>
-                    <p><small><strong>Send by:</strong> post</small></p>
-                    <p><small><strong>Receive at:</strong>16 Sallymount avenue, Dublin, Ireland - D023212</small></p>
-                </fieldset> 
+                <p><small><strong>street: </strong>{street}</small></p>
+                <p><small><strong>city: </strong>{city}</small></p>
+                <p><small><strong>state: </strong>{state}</small></p>
+                <p><small><strong>postalcode: </strong>{postalcode}</small></p>
+                <p><small><strong>country: </strong>{country}</small></p>
             </div>
         </>
     )
@@ -121,9 +129,17 @@ const TradePage = () => {
                             userImage={item.user.image}
                             userName={item.user.name}
                             postDate={item.createdAt}
-                            offersCount={2}
+                            quantity={item.quantity}
+                            status={item.status}
+                            tradeType={item.tradeType}
                         />
-                        <DeliveryDetail />
+                        <DeliveryDetail 
+                            street={item.user.street}
+                            city={item.user.city}
+                            state={item.user.state}
+                            postalcode={item.user.postalcode}
+                            country={item.user.country}
+                        />
 
           
                         <h1 class="center">For this item:</h1>
@@ -135,9 +151,17 @@ const TradePage = () => {
                             userImage={offerItem.user.image}
                             userName={offerItem.user.name}
                             postDate={offerItem.createdAt}
-                            offersCount={2}
+                            quantity={item.quantity}
+                            status={item.status}
+                            tradeType={item.tradeType}
                         />
-                        <DeliveryDetail />
+                        <DeliveryDetail 
+                            street={offerItem.user.street}
+                            city={offerItem.user.city}
+                            state={offerItem.user.state}
+                            postalcode={offerItem.user.postalcode}
+                            country={offerItem.user.country}
+                        />
 
                         <form onSubmit={handleSubmit}>
                             <button type="submit">Trade</button>

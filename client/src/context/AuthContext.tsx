@@ -1,23 +1,10 @@
 import { createContext } from 'preact';
 import { useContext, useEffect, useState } from 'preact/hooks';
 import { fetchUser as fetchUserService } from "../services/authService";
+import { AuthContextType, AuthUser } from '../types/item';
 
 const TOKEN_KEY = 'auth_token';
 
-interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  image?: string;
-}
-
-interface AuthContextType {
-  user: AuthUser | null;
-  token: string | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

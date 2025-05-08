@@ -22,7 +22,6 @@ class AddressSchema(BaseModel):
 class UserSchema(BaseModel):
     name: str
     email: EmailStr
-    password: str
     anddress: Optional[AddressSchema] = None
 
 
@@ -85,7 +84,7 @@ class ItemUpdateSchema(BaseModel):
 
 class ItemPublic(ItemBase):
     id: int
-    user: UserSchema
+    user: UserPublic
     name: str
     description: str
     quantity: int

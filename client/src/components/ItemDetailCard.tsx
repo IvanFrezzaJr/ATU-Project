@@ -1,12 +1,18 @@
 import styles from "../styles/ItemDetail.module.css";
-import { ItemDetailFooterSetup } from "../types/item";
+import { ItemDetailFooterSetup, ItemStatus, TradeType } from "../types/item";
 import { PageType } from "../types/page";
 import { useLocation } from "wouter-preact";
 import { useCallback } from "react";
 import itemPlaceholder from '../assets/logo.svg';
 import profilePlaceholder from '../assets/profile-placeholder.png';
+import { format } from 'date-fns';
+import { enIE } from 'date-fns/locale';
+import { getStatusDisplay } from "../utils/statusUtils";
+import { getTradeTypeDisplay } from "../utils/tradeUtils";
 
 const apiUrl = import.meta.env.VITE_API_URL;
+
+
 
 type ButtonActionType = "navigate" | "alert" | "custom";
 
@@ -18,7 +24,9 @@ interface ItemDetailProps {
     userImage: string;
     userName: string;
     postDate: Date;
-    offersCount: number;
+    quantity: number;
+    status: ItemStatus;
+    tradeType: TradeType;
     footerSetup?: ItemDetailFooterSetup;
     buttonActionType?: ButtonActionType;
     customButtonAction?: () => void;
@@ -92,11 +100,18 @@ const ItemDetailCard = ({
     userImage,
     userName,
     postDate,
-    offersCount,
+    quantity,
+    status,
+    tradeType,
     footerSetup,
     buttonActionType,
     customButtonAction,
 }: ItemDetailProps) => {
+
+    const { label, style } = getStatusDisplay(status);
+    const { label: tradeLabel, style: tradeStyle } = getTradeTypeDisplay(tradeType);
+
+
     return (
         <article>
             {/* Item main info */}
@@ -125,25 +140,32 @@ const ItemDetailCard = ({
                             <small>
                                 <strong>{userName}</strong>
                             </small>
-                            <small>Posted on: {postDate}</small>
+                            <small>Posted on: {format(postDate, "dd/MM/yyyy HH:mm", { locale: enIE })}</small>
                         </div>
                     </div>
                 )}
 
                 {/* Optional action menu with button */}
-                {footerSetup?.actionMenu?.show && (
+
                     <div className={styles["offer-info"]}>
+                    {footerSetup?.actionMenu?.show && (
                         <CustomButton
                             page={footerSetup.page}
                             id={productId}
                             offer_id={footerSetup.item?.id}
                             customAction={buttonActionType === "custom" ? customButtonAction : undefined}
                         />
+                    )}
+                        <small>Quantity: <strong>{quantity}</strong> offers
+                        </small>
+                         <small>
+                            Status: <strong style={style}>{label}</strong> offers
+                        </small>
                         <small>
-                            These goods have <strong>{offersCount}</strong> offers
+                            Trade type: <strong style={tradeStyle}>{tradeLabel}</strong>
                         </small>
                     </div>
-                )}
+                
             </div>
         </article>
     );
