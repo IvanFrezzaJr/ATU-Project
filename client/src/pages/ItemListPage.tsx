@@ -47,7 +47,7 @@ const ItemListPage = () => {
       try {
         const result = await getPaginatedItems({
           page: currentPage,
-          onlyOfferItems: true,
+          inOffer: true,
           itemsPerPage,
           token,
         });

@@ -55,9 +55,8 @@ const OfferListPage = () => {
         const result = await getPaginatedItems({
           page: currentPage,
           itemsPerPage,
-          onlyUserItems: true,
+          userId: parseInt(user.id),
           token,
-          itemId: parseInt(user.id),
         });
         setItems(result.data);
         setTotalPages(result.totalPages);
@@ -86,11 +85,14 @@ const OfferListPage = () => {
               userImage={item.user.image}
               userName={item.user.name}
               postDate={item.createdAt}
-              offersCount={2}
+              quantity={item.quantity}
+              status={item.status}
+              tradeType={item.tradeType}
             />
 
             <h2 class="center">What would you offer?</h2>
             <ItemList
+              user={user}
               items={items}
               currentPage={currentPage}
               totalPages={totalPages}

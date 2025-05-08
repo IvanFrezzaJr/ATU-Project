@@ -2,7 +2,7 @@ import enum
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import TIMESTAMP, ForeignKey, Integer, String, func
+from sqlalchemy import TIMESTAMP, ForeignKey, Integer, String, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
 
@@ -90,13 +90,16 @@ class UserItem:
 @table_registry.mapped_as_dataclass
 class Trade:
     __tablename__ = 'trade'
+    __table_args__ = (
+        UniqueConstraint('user_item_id_from', 'user_item_id_to', name='trade_user_item_ids_unique'),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
     user_item_id_from: Mapped[int] = mapped_column(
-        ForeignKey('user_item.id'), unique=True
+        ForeignKey('user_item.id')
     )
     user_item_id_to: Mapped[int] = mapped_column(
-        ForeignKey('user_item.id'), unique=True
+        ForeignKey('user_item.id')
     )
     trade_date: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False))
 

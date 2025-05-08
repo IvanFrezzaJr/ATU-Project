@@ -9,9 +9,8 @@ const itemsUrl = `${apiUrl}/items`;
 interface GetPaginatedItemsParams {
   page?: number;
   itemsPerPage?: number;
-  onlyOfferItems?: boolean;
-  onlyUserItems?: boolean;
-  itemId?: number;
+  inOffer?: boolean;
+  userId?: number;
   token?: string | null;
 }
 
@@ -103,9 +102,8 @@ export const deleteItem = async (id: number): Promise<void> => {
 export const getPaginatedItems = async ({
   page = 1,
   itemsPerPage = 10,
-  onlyOfferItems = false,
-  onlyUserItems = false,
-  itemId,
+  inOffer = false,
+  userId,
   token,
 }: GetPaginatedItemsParams): Promise<PaginationResult<UserItemResponse>> => {
   const offset = (page - 1) * itemsPerPage;
@@ -123,9 +121,8 @@ export const getPaginatedItems = async ({
     offset: offset.toString(),
   });
 
-  if (onlyOfferItems) query.append('only_offer_items', 'true');
-  if (onlyUserItems) query.append('only_user_items', 'true');
-  if (itemId !== undefined) query.append('item_id', itemId.toString());
+  if (inOffer) query.append('in_offer', 'true');
+  if (userId) query.append('user_id', userId.toString());
 
   const response = await fetch(`${itemsUrl}/?${query.toString()}`, {
     headers,

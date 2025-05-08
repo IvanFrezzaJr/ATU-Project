@@ -21,6 +21,7 @@ export interface ItemResponse {
     description: string;
     quantity: number;
     status: ItemStatus;
+    tradeType: TradeType;
     imagesPath: string[];
     createdAt: Date;
     updatedAt: Date;
@@ -69,4 +70,21 @@ export interface UserItemRequest {
   quantity: number;
   status: ItemStatus;
   tradeType: TradeType;
+}
+
+
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+}
+
+export interface AuthContextType {
+  user: AuthUser | null;
+  token: string | null;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
 }
