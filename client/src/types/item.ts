@@ -37,9 +37,9 @@ export interface UserItemResponse extends ItemResponse {
 }
 
 export enum ItemStatus {
-    OfferAgreed = "offerAgreed",
-    InOffer = "inOffer",
-    NotListed = "notListed",
+    OfferAgreed = "offer_agreed",
+    InOffer = "in_offer",
+    NotListed = "not_listed",
   }
   
 

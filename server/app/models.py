@@ -62,9 +62,9 @@ class UserItem:
     name: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
-    user: Mapped["User"] = relationship()
+    user: Mapped["User"] = relationship(init=False)
 
-    images_path: Mapped[List[str]] = mapped_column(ARRAY(String))
+    images_path: Mapped[List[str]] = mapped_column(ARRAY(String), default=None)
     quantity: Mapped[int] = mapped_column(Integer, default=1)
 
     # Definindo valores default para os Enums

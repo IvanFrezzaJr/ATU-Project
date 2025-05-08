@@ -22,7 +22,7 @@ const OfferListPage = () => {
   const itemsPerPage = 2;
   
 
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
 
   useEffect(() => {
@@ -50,14 +50,14 @@ const OfferListPage = () => {
 
   useEffect(() => {
     const fetchOffers = async () => {
-      if (!item) return;
+      if (!user) return;
       try {
         const result = await getPaginatedItems({
           page: currentPage,
           itemsPerPage,
           onlyUserItems: true,
           token,
-          itemId: item.id,
+          itemId: parseInt(user.id),
         });
         setItems(result.data);
         setTotalPages(result.totalPages);

@@ -30,13 +30,15 @@ const ItemListPage = () => {
           });
           setItems(result.data);
           setTotalPages(result.totalPages);
+          setCurrentPage(result.currentPage);
+
         } catch (error) {
           console.error('Erro ao buscar itens:', error);
         }
       };
       fetchItems();
     }
-  }, [isLoading, token]);
+  }, [isLoading, token, currentPage]);
 
   useEffect(() => {
     if (!token) return;
@@ -51,6 +53,7 @@ const ItemListPage = () => {
         });
         setItems(result.data);
         setTotalPages(result.totalPages);
+        setCurrentPage(result.currentPage);
       } catch (error) {
         console.error('Erro ao buscar itens:', error);
       }
