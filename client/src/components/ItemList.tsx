@@ -41,6 +41,7 @@ const ItemList = ({ items, currentPage, totalPages, onPageChange, page, item }: 
           offersCount={2}
           footerSetup={itemDetailFooterSetup}
         />
+
       ))}
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
     </div>

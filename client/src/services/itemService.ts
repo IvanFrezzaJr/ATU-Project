@@ -1,5 +1,5 @@
 import { UserItemResponse, PaginationResult, UserItemRequest } from '../types/item';
-import { snakeToCamel } from '../utils/caseConverters';
+import { camelToSnake, snakeToCamel } from '../utils/caseConverters';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const itemsUrl = `${apiUrl}/items`;
@@ -51,7 +51,7 @@ export const createItem = async (
       'Authorization': `Bearer ${token}`
     },
 
-    body: JSON.stringify(item),
+    body: JSON.stringify(camelToSnake(item)),
   });
 
   if (!response.ok) throw new Error('Error creating item');

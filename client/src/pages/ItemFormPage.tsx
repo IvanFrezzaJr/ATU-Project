@@ -10,7 +10,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const ItemFormPage = () => {
   const { id } = useParams();
-  const [, navigate] = useLocation();
+  const [, setLocation] = useLocation();
   const { token, user } = useAuth();
 
   const [name, setName] = useState("");
@@ -20,6 +20,13 @@ const ItemFormPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [images, setImages] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+
+
+  useEffect(() => {
+    if (!token) {
+        setLocation('/');
+    }
+    }, [token]);
 
   useEffect(() => {
     if (id && token) {
@@ -67,7 +74,7 @@ const ItemFormPage = () => {
       await createItem(payload, token);
     }
 
-    navigate("/items");
+    setLocation("/items");
   };
 
   return (

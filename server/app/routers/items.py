@@ -63,19 +63,7 @@ def read_items(
     total_items = 0
     query = None
 
-    if not current_user:
-        total_items = session.scalar(
-            select(func.count())
-            .select_from(UserItem))
 
-        query = (
-            select(UserItem)
-            .options(selectinload(UserItem.user))
-            .limit(limit)
-            .offset(offset)
-        )
-
-    
     if current_user and only_user_items:
         total_items = session.scalar(
             select(func.count())
@@ -91,7 +79,7 @@ def read_items(
         )
 
     
-    if current_user and only_offer_items:
+    elif current_user and only_offer_items:
         total_items = session.scalar(
             select(func.count())
             .where(UserItem.user_id != current_user.id)
@@ -104,7 +92,18 @@ def read_items(
             .limit(limit)
             .offset(offset)
         )
+        
+    else:
+        total_items = session.scalar(
+            select(func.count())
+            .select_from(UserItem))
 
+        query = (
+            select(UserItem)
+            .options(selectinload(UserItem.user))
+            .limit(limit)
+            .offset(offset)
+        )
 
     if query  is None:
         raise HTTPException(
@@ -122,6 +121,7 @@ def read_items(
         'currentPage': (offset // limit) + 1,
         'totalPages': (total_items + limit - 1) // limit,
     }
+
 
 
 @router.get('/{item_id}', response_model=ItemPublic)

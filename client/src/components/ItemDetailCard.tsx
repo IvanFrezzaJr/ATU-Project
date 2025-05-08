@@ -4,7 +4,9 @@ import { PageType } from "../types/page";
 import { useLocation } from "wouter-preact";
 import { useCallback } from "react";
 import itemPlaceholder from '../assets/logo.svg';
+import profilePlaceholder from '../assets/profile-placeholder.png';
 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 type ButtonActionType = "navigate" | "alert" | "custom";
 
@@ -100,7 +102,7 @@ const ItemDetailCard = ({
             {/* Item main info */}
             <div className={styles["item-info"]}>
                 <div>
-                    <img src={productImage || itemPlaceholder} alt="Product Image" />
+                    <img src={productImage ? `${apiUrl}${productImage}` : itemPlaceholder} width="40" height="40" alt="Product Image" />
 
                 </div>
                 <div>
@@ -117,7 +119,7 @@ const ItemDetailCard = ({
                 {footerSetup?.userInfo?.show && (
                     <div className={styles["user-info"]}>
                         <div>
-                            <img src={userImage} alt="User Image" />
+                            <img src={ userImage ? `${apiUrl}${userImage}`: profilePlaceholder} alt="User Image" />
                         </div>
                         <div className={styles["user-info-text"]}>
                             <small>
