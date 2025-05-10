@@ -1,58 +1,55 @@
-import ProfilePage from './ProfilePage';
-import ItemPage from './ItemPage';
+// src/pages/AdminLayout.tsx
+
+import { useEffect } from 'preact/hooks';
+import { useParams, useLocation } from 'wouter-preact';
+import { useAuth } from '../context/AuthContext';
+
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../styles/Admin.module.css';
-import { useEffect, useState } from 'preact/hooks';
-import { useAuth } from '../context/AuthContext';
-import { useLocation } from 'wouter-preact';
 
+import ProfilePage from './ProfilePage';
+import ItemPage from './ItemPage';
+import AdminTradePage from './AdminTradePage';
 
-const AdminPage = () => {
-    const [page, setPage] = useState('profile');
-    const [, setLocation] = useLocation();
+const AdminLayout = () => {
+  const { section } = useParams();
+  const [, setLocation] = useLocation();
+  const { token } = useAuth();
 
-    const { token } = useAuth();
+  useEffect(() => {
+    if (!token) setLocation('/');
+  }, [token]);
 
-
-    useEffect(() => {
-    if (!token) {
-        setLocation('/');
+  const renderPage = () => {
+    switch (section) {
+      case 'profile':
+        return <ProfilePage />;
+      case 'items':
+        return <ItemPage />;
+      case 'trades':
+        return <AdminTradePage />;
+      default:
+        return <ProfilePage />;
     }
-    }, [token]);
+  };
 
-    const renderPage = () => {
-        switch (page) {
-            case 'profile':
-                return <ProfilePage />;
-            case 'items':
-                return <ItemPage />;
-            case 'trades':
-                return <div>Trades Page</div>; 
-            default:
-                return <ProfilePage />;
-        }
-    };
-    
-    return (
-        <div>
-            <Header />
-
-            <div className={styles.layout}>
-                <aside>
-                    <nav className={styles.menu}>
-                        <button onClick={() => setPage('profile')}>Profile</button>
-                        <button onClick={() => setPage('items')}>Items</button>
-                        <button onClick={() => setPage('trades')}>Trades</button>
-                    </nav>
-                </aside>
-                <main>
-                    {renderPage()}
-                </main>
-            </div>
-            <Footer />
-        </div >
-    );
+  return (
+    <div>
+      <Header />
+      <div className={styles.layout}>
+        <aside>
+          <nav className={styles.menu}>
+            <button onClick={() => setLocation('/admin/profile')}>Profile</button>
+            <button onClick={() => setLocation('/admin/items')}>Items</button>
+            <button onClick={() => setLocation('/admin/trades')}>Trades</button>
+          </nav>
+        </aside>
+        <main>{renderPage()}</main>
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
-export default AdminPage;
+export default AdminLayout;

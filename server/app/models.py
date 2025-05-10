@@ -95,12 +95,17 @@ class Trade:
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
+
     user_item_id_from: Mapped[int] = mapped_column(
-        ForeignKey('user_item.id')
+        ForeignKey('user_item.id'), nullable=False
     )
+    user_item_from: Mapped["UserItem"] = relationship("UserItem", foreign_keys=[user_item_id_from], backref="trade_from", init=False)
+
     user_item_id_to: Mapped[int] = mapped_column(
-        ForeignKey('user_item.id')
+        ForeignKey('user_item.id'), nullable=False
     )
+    user_item_to: Mapped["UserItem"] = relationship("UserItem", foreign_keys=[user_item_id_to], backref="trade_to", init=False)
+
     trade_date: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False))
 
     # Definindo valor default para TradeStatusEnum

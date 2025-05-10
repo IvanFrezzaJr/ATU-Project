@@ -13,6 +13,8 @@ import CreateIcon from '@mui/icons-material/AddCircle';
 
 // Estilos
 import styles from '../styles/Grid.module.css';
+import { getTradeTypeDisplay } from "../utils/tradeUtils";
+import { getStatusDisplay } from "../utils/statusUtils";
 
 const ItemPage = () => {
   const [items, setItems] = useState<UserItemResponse[]>([]);
@@ -21,8 +23,10 @@ const ItemPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
+  
+  const { token, user } = useAuth();
 
-  const { token } = useAuth();
+
 
   useEffect(() => {
     if (!token) {
@@ -36,8 +40,8 @@ const ItemPage = () => {
         const result = await getPaginatedItems({
           page: currentPage,
           itemsPerPage,
-          onlyUserItems: true,
           token,
+          userId: user ? parseInt(user?.id) : null
         });
         setItems(result.data);
         setTotalPages(result.totalPages);
@@ -80,25 +84,31 @@ const Grid = ({ title, data }: GridProps) => {
               <th>Name</th>
               <th>Description</th>
               <th>Status</th>
+              <th>Trade type</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.description}</td>
-                <td>{item.status}</td>
-                <td class="actions">
-                  <span class="material-icons" onClick={() => setLocation(`/items/${item.id}`)} style={{ cursor: "pointer" }}>
-                    <EditIcon />
-                  </span>
+            {data.map((item) => {
+                const { label, style } = getStatusDisplay(item.status);
+                const { label: tradeLabel, style: tradeStyle } = getTradeTypeDisplay(item.tradeType);
+            
+                return (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.name}</td>
+                    <td>{item.description}</td>
+                    <td style={style}>{label}</td>
+                    <td style={tradeStyle}>{tradeLabel}</td>
+                    <td class="actions">
+                      <span class="material-icons" onClick={() => setLocation(`/items/${item.id}`)} style={{ cursor: "pointer" }}>
+                        <EditIcon />
+                      </span>
 
-                  <span class="material-icons"><a href="#"><DeleteIcon /></a></span>
-                </td>
-              </tr>
-            ))}
+                      <span class="material-icons"><a href="#"><DeleteIcon /></a></span>
+                    </td>
+                  </tr>
+                )})}
           </tbody>
         </table>
       </div>

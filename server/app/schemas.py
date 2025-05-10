@@ -107,8 +107,8 @@ class ItemList(BaseModel):
 
 
 class TradeBase(BaseModel):
-    user_item_id_from: int
-    user_item_id_to: int
+    user_item_from: ItemPublic
+    user_item_to: ItemPublic
     trade_date: datetime
     trade_status: TradeStatusEnum = TradeStatusEnum.opened
 

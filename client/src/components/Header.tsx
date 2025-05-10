@@ -40,7 +40,7 @@ const Header = () => {
                 </button>
               </li>
               <li className="profile">
-                <Link href="/admin">
+                <Link href="/admin/profile">
                   <img src={user.image ? `${apiUrl}${user.image}` : profilePlaceholder} width="40" height="40" alt="User admin" />
                 </Link>
               </li>

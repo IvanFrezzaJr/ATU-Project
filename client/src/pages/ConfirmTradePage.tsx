@@ -18,7 +18,7 @@ const ConfirmTradePage = () => {
                             <h3><strong>Exchange </strong> Porposed Successful</h3>
                             <p>Waiting for the user confirmation. </p>
                             <img src={logo} alt="logo" />
-                            <p>Check the proposal status in the <a href="#">user panel</a>.</p>
+                            <p>Check the proposal status in the <Link href='/admin/trades'>user panel</Link>.</p>
                             <div class="center small"><Link href='/'>Redirect to home page</Link></div>
                         </div>
                     </div>  

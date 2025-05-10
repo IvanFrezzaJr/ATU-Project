@@ -26,7 +26,7 @@ export function App() {
         <Route path="/login"><LoginPage /></Route>
         <Route path="/signup"><SignUpPage /></Route>
         <Route path="/profile"><ProfilePage /></Route>
-        <Route path="/admin"><AdminPage /></Route>
+        <Route path="/admin/:section" component={AdminPage} />
 
         <Route path="/confirm"><ConfirmTradePage /></Route>
         <Route path="/offers/:item_id<number>" component={OfferListPage}><OfferListPage /></Route>
