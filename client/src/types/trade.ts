@@ -28,13 +28,13 @@ export interface TradePublic {
   
 
   export interface TradeResponse {
-  id: number;
-  user_item_from: ItemResponse;
-  user_item_to: ItemResponse;
-  trade_date: string;
-  trade_status: 'pending' | 'accepted' | 'rejected';
-  created_at: string;
-  updated_at: string;
+    id: number;
+    userItemFrom: ItemResponse;
+    userItemTo: ItemResponse;
+    tradeDate: string;
+    tradeStatus: 'pending' | 'accepted' | 'rejected';
+    createdAt: string;
+    updatedAt: string;
   }
   
 

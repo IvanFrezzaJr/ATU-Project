@@ -2,9 +2,9 @@ from datetime import datetime
 from http import HTTPStatus
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import Session, selectinload
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session, selectinload, aliased
 
 from app.database import get_session
 from app.models import Trade, UserItem, TradeStatusEnum
@@ -51,15 +51,63 @@ def create_trade(
 
 
 @router.get('/', response_model=TradeList)
-def read_trades(session: T_Session, limit: int = 10, offset: int = 0):
-    trades = (
-        session.scalars(select(Trade)
-                        .options(selectinload(Trade.user_item_from))
-                        .options(selectinload(Trade.user_item_to))
-                        .limit(limit)
-                        .offset(offset)).all()
+def read_trades(
+    session: T_Session, 
+    limit: int = 10, 
+    offset: int = 0,
+    user_id: int = Query(False),
+    only_offer: bool = Query(False)):
+
+    UserItemFrom = aliased(UserItem)
+    UserItemTo = aliased(UserItem)
+
+    base_query = (
+        select(Trade)
+        .join(UserItemFrom, Trade.user_item_from)
+        .join(UserItemTo, Trade.user_item_to)
+        .options(
+            selectinload(Trade.user_item_from),
+            selectinload(Trade.user_item_to),
+        )
     )
-    return {'trades': trades}
+
+    conditions = []
+
+    if only_offer:
+        conditions.append(UserItemTo.user_id == user_id)
+    else:
+        conditions.append(UserItemFrom.user_id == user_id)
+
+    if conditions:
+        base_query = base_query.where(*conditions)
+
+    # pagination
+    query = base_query.limit(limit).offset(offset)
+
+    # aggregation
+    count_query = select(func.count()).select_from(UserItem)
+    if conditions:
+        count_query = count_query.where(*conditions)
+
+    total_items = session.scalar(count_query)
+
+
+    if query  is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Items not found',
+        )
+
+    
+    items = session.scalars(query).all()
+
+    return {
+        'data': items,
+        'totalItems': total_items,
+        'itemsPerPage': limit,
+        'currentPage': (offset // limit) + 1,
+        'totalPages': (total_items + limit - 1) // limit,
+    }
 
 
 @router.get('/{trade_id}', response_model=TradePublic)
