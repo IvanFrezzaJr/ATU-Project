@@ -2,15 +2,15 @@
 
 import { useEffect } from 'preact/hooks';
 import { useParams, useLocation } from 'wouter-preact';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import styles from '../styles/Admin.module.css';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import styles from '../../styles/Admin.module.css';
 
-import ProfilePage from './ProfilePage';
-import ItemPage from './ItemPage';
-import AdminTradePage from './AdminTradePage';
+import ProfilePage from './AdminProfilePage';
+import ItemPage from './AdminItemPage';
+import AdminTradePage from '../AdminTradePage';
 
 const AdminLayout = () => {
   const { section } = useParams();

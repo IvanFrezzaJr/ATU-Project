@@ -7,14 +7,14 @@ import ItemListPage from './pages/ItemListPage';
 import AboutPage from './pages/AboutPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-import ProfilePage from './pages/ProfilePage';
-import AdminPage from './pages/AdminPage';
+import ProfilePage from './pages/admin/AdminProfilePage';
+import AdminPage from './pages/admin/AdminPage';
 import OfferListPage from "./pages/OfferListPage";
 import TradePage from "./pages/TradePage";
 import NotFound from "./pages/NotFound";
 import ConfirmTradePage from "./pages/ConfirmTradePage";
-import ItemPage from "./pages/ItemPage";
-import ItemFormPage from "./pages/ItemFormPage";
+import ItemPage from "./pages/admin/AdminItemPage";
+import ItemFormPage from "./pages/admin/AdminItemFormPage";
 
 export function App() {
 
