@@ -99,3 +99,11 @@ button {
   color: #1f8a3f;
   border: 1px solid #aaffc4;
 }
+
+
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

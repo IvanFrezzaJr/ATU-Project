@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.database import get_session
 from app.models import Trade, UserItem, TradeStatusEnum
@@ -52,7 +52,13 @@ def create_trade(
 
 @router.get('/', response_model=TradeList)
 def read_trades(session: T_Session, limit: int = 10, offset: int = 0):
-    trades = session.scalars(select(Trade).limit(limit).offset(offset)).all()
+    trades = (
+        session.scalars(select(Trade)
+                        .options(selectinload(Trade.user_item_from))
+                        .options(selectinload(Trade.user_item_to))
+                        .limit(limit)
+                        .offset(offset)).all()
+    )
     return {'trades': trades}
 
 

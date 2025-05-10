@@ -1,76 +1,110 @@
+/** @jsxImportSource preact */
 import { useState } from "preact/hooks";
 import { Link, useLocation } from "wouter-preact";
-import { login as loginService } from "../services/authService";
-import Message from "../components/Message";
-import styles from '../styles/Auth.module.css';
-import { useAuth } from '../context/AuthContext';
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+import { FormField } from "../components/FormField";
+import { GlobalMessage } from "../components/GlobalMessage";
+import { useFormErrors } from "../hooks/useFormErrors";
+import { validateEmail, validatePassword } from "../utils/validators";
+import { login } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
+import styles from "../styles/Auth.module.css";
+
+export default function LoginPage() {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const [, navigate] = useLocation();
-  const { login } = useAuth();
+  const { login: loginContext } = useAuth();
 
+  const { errors, setFieldError, clearFieldError, setErrors } = useFormErrors<typeof form>();
+  const [globalMessage, setGlobalMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const handleLogin = async (e: Event) => {
-    e.preventDefault(); 
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleBlur = (field: string) => {
+    let error = "";
+    if (field === "email") error = validateEmail(form.email) || "";
+    if (field === "password") error = validatePassword(form.password) || "";
+
+    error ? setFieldError(field as keyof typeof form, error) : clearFieldError(field as keyof typeof form);
+  };
+
+  const handleSubmit = async (e: Event) => {
+    e.preventDefault();
+
+    const emailErr = validateEmail(form.email);
+    const passwordErr = validatePassword(form.password);
+
+    if (emailErr || passwordErr) {
+      setErrors({
+        email: emailErr || "",
+        password: passwordErr || "",
+      });
+      setGlobalMessage({ type: "error", text: "Error validating the form." });
+      return;
+    }
 
     try {
-      const user = await loginService(email, password);
+      const user = await login(form.email, form.password);
       console.log("Authenticated user:", user);
-      await login(email, password);
-      navigate("/"); 
+      await loginContext(form.email, form.password);
+      navigate("/");
     } catch (error) {
-      console.error("Error logging:", error);
-      setErrorMessage("Failed to authenticate. Please check your credentials.");
-      setShowError(true);
+      if (error instanceof Error) {
+        console.error("Login error:", error.message);
+        setGlobalMessage({ type: "error", text: error.message });
+      } else {
+        console.error("Unknown error:", error);
+        setGlobalMessage({ type: "error", text: "Unknown error when logging in." });
+      }
     }
   };
 
   return (
     <main>
-        <div class={styles.content}>
+      <div class={styles.content}>
         <div class="viewport">
-            <h1 class={styles.center}>Sign in</h1>
-            <p class={styles.center}>Don't have an account? <Link href="/SignUp">Get started</Link></p>
-            <form onSubmit={handleLogin}>
-            <label>Email address</label>
-            <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                aria-label="Email"
-                autoComplete="email"
-                required
-                value={email}
-                onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
+          <h1 class={styles.center}>Sign In</h1>
+          <p class={styles.center}>
+            Don't have an account? <Link href="/SignUp">Create one</Link>
+          </p>
+
+          {globalMessage && (
+            <GlobalMessage
+              type={globalMessage.type}
+              message={globalMessage.text}
+              onClose={() => setGlobalMessage(null)}
             />
-            <label>Password</label>
-            <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                aria-label="Password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <FormField
+              label="Email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              onBlur={() => handleBlur("email")}
+              error={errors.email}
             />
-            <button type="submit">Login</button>
-            </form>
+            <FormField
+              label="Senha"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              onBlur={() => handleBlur("password")}
+              error={errors.password}
+            />
+
+            <button type="submit">Entrar</button>
+          </form>
         </div>
       </div>
-      {showError && (
-        <Message
-          title="Erro no Login"
-          message={errorMessage}
-          onClose={() => setShowError(false)}
-        />
-      )}
     </main>
   );
-};
-
-export default LoginPage;
+}

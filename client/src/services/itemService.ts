@@ -10,7 +10,7 @@ interface GetPaginatedItemsParams {
   page?: number;
   itemsPerPage?: number;
   inOffer?: boolean;
-  userId?: number;
+  userId?: number | null;
   token?: string | null;
 }
 
