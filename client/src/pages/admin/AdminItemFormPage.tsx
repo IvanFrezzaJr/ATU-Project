@@ -1,15 +1,15 @@
 /** @jsxImportSource preact */
 import { useEffect, useState } from "preact/hooks";
 import { useLocation, useParams } from "wouter-preact";
-import { createItem, getItemById, updateItem, uploadImage } from "../services/itemService";
-import { useAuth } from "../context/AuthContext";
-import { ItemStatus, TradeType, UserItemRequest } from "../types/item";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { FormField } from "../components/FormField";
-import { GlobalMessage } from "../components/GlobalMessage";
-import { useFormErrors } from "../hooks/useFormErrors";
-import { validateName } from "../utils/validators";
+import { createItem, getItemById, updateItem, uploadImage } from "../../services/itemService";
+import { useAuth } from "../../context/AuthContext";
+import { ItemStatus, TradeType, UserItemRequest } from "../../types/item";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { FormField } from "../../components/FormField";
+import { GlobalMessage } from "../../components/GlobalMessage";
+import { useFormErrors } from "../../hooks/useFormErrors";
+import { validateName } from "../../utils/validators";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

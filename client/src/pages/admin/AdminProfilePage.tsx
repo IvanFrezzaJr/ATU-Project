@@ -1,19 +1,19 @@
 /** @jsxImportSource preact */
 import { useState, useEffect } from "preact/hooks";
 import { useLocation } from "wouter-preact";
-import { getCurrentUser, updateUser } from "../services/authService";
-import { searchAddress } from "../services/addressService";
-import { uploadImage } from "../services/itemService";
+import { getCurrentUser, updateUser } from "../../services/authService";
+import { searchAddress } from "../../services/addressService";
+import { uploadImage } from "../../services/itemService";
 
-import { FormField } from "../components/FormField";
-import { GlobalMessage } from "../components/GlobalMessage";
+import { FormField } from "../../components/FormField";
+import { GlobalMessage } from "../../components/GlobalMessage";
 
-import { useAuth } from "../context/AuthContext";
-import { useFormErrors } from "../hooks/useFormErrors";
-import { validateEmail, validateName, validatePassword } from "../utils/validators";
+import { useAuth } from "../../context/AuthContext";
+import { useFormErrors } from "../../hooks/useFormErrors";
+import { validateEmail, validateName, validatePassword } from "../../utils/validators";
 
-import styles from '../styles/Auth.module.css';
-import { UserUpdate } from "../types/user";
+import styles from '../../styles/Auth.module.css';
+import { UserUpdate } from "../../types/user";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

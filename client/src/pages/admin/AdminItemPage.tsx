@@ -1,9 +1,9 @@
 // src/pages/ItemPage.tsx
 
 import { useEffect, useState } from "preact/hooks";
-import { getPaginatedItems } from "../services/itemService";
-import { PaginationResult, UserItemResponse } from "../types/item";
-import { useAuth } from "../context/AuthContext";
+import { getPaginatedItems } from "../../services/itemService";
+import { PaginationResult, UserItemResponse } from "../../types/item";
+import { useAuth } from "../../context/AuthContext";
 import { useLocation } from "wouter-preact";
 
 // Ícones do MUI
@@ -12,9 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CreateIcon from '@mui/icons-material/AddCircle';
 
 // Estilos
-import styles from '../styles/Grid.module.css';
-import { getTradeTypeDisplay } from "../utils/tradeUtils";
-import { getStatusDisplay } from "../utils/statusUtils";
+import styles from '../../styles/Grid.module.css';
+import { getTradeTypeDisplay } from "../../utils/tradeUtils";
+import { getStatusDisplay } from "../../utils/statusUtils";
 
 const ItemPage = () => {
   const [items, setItems] = useState<UserItemResponse[]>([]);
