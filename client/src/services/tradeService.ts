@@ -7,6 +7,8 @@ interface PaginatedParams {
 page: number;
 itemsPerPage: number;
 token?: string | null;
+onlyOffer?: boolean;
+userId?: number | null;
 }
 
 
@@ -104,26 +106,47 @@ export const deleteTrade = async (
 };
 
 
-export const getPaginatedTrades = async (
-  params: PaginatedParams
-): Promise<PaginationResult<TradeResponse>> => {
-  const offset = (params.page - 1) * params.itemsPerPage;
+/**
+ * Fetches paginated trades.
+ * @param page - Page number (starting from 1).
+ * @param itemsPerPage - Number of items per page.
+ * @param userId - Filter trades by user ID.
+ * @param onlyOffer - Filter only trades that are offers.
+ * @param token - Optional bearer token for authorization.
+ */
+export const getPaginatedTrades = async ({
+  page = 1,
+  itemsPerPage = 10,
+  userId,
+  onlyOffer,
+  token,
+}: PaginatedParams): Promise<PaginationResult<TradeResponse>> => {
+  const offset = (page - 1) * itemsPerPage;
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const query = new URLSearchParams({
-    limit: params.itemsPerPage.toString(),
+    limit: itemsPerPage.toString(),
     offset: offset.toString(),
   });
 
-  const response = await fetch(`${tradesUrl}?${query}`, {
-    headers: params.token ? { Authorization: `Bearer ${params.token}` } : {},
+  if (userId) query.append('user_id', userId.toString());
+  if (onlyOffer) query.append('only_offer', 'true');
+
+  const response = await fetch(`${tradesUrl}?${query.toString()}`, {
+    headers,
   });
 
-  if (!response.ok) throw new Error('Erro ao buscar trocas paginadas');
-  const data = await response.json();
+  if (!response.ok) {
+    throw new Error('Erro ao buscar trocas paginadas');
+  }
 
-  return {
-    data: data.results ?? data.trades ?? [], // Aqui retornamos os dados ou um array vazio
-    totalPages: Math.ceil((data.total || data.count || 1) / params.itemsPerPage), // Total de páginas, dividindo o total de itens pelos itens por página
-    totalItems: data.total || data.count || 0, // Total de itens, se não houver, coloca 0
-    currentPage: params.page, // Página atual
-  };
+  const data = await response.json();
+  return snakeToCamel(data);
 };

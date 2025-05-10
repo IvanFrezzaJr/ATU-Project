@@ -14,7 +14,7 @@ const AdminTradePage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 10;
 
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [, setLocation] = useLocation();
 
     useEffect(() => {
@@ -26,11 +26,14 @@ const AdminTradePage = () => {
     useEffect(() => {
         const fetchTrades = async () => {
             try {
-                const result: PaginationResult<TradeResponse> = await getPaginatedTrades({
+                const result = await getPaginatedTrades({
                     page: currentPage,
                     itemsPerPage,
                     token,
+                    userId: user ? parseInt(user?.id) : null,
+                    onlyOffer: true
                 });
+                console.log(result);
                 setTrades(result.data);
                 setTotalPages(result.totalPages);
             } catch (error) {
@@ -43,26 +46,9 @@ const AdminTradePage = () => {
     }, [currentPage]);
 
     return (
-        <div>
-            <Grid title="Admin Trades" data={trades} />
-        </div>
-    );
-};
-
-interface GridProps {
-    title: string;
-    data: TradeResponse[];
-}
-
-const Grid = ({ title, data }: GridProps) => {
-
-    const [, setLocation] = useLocation();
-
-  
-    return (
-    <>
+        <>
         <div className={styles.searchPagination}>
-            <h2>{title}</h2>
+            <h2>Trade Page</h2>
         </div>
         <div>
             <table>
@@ -77,13 +63,13 @@ const Grid = ({ title, data }: GridProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((trade) => (
+                    {trades.map((trade) => (
                         <tr key={trade.id}>
                             <td>{trade.id}</td>
-                            <td>{trade.user_item_from.name}</td>
-                            <td>{trade.user_item_to.name}</td>
-                            <td>{new Date(trade.trade_date).toLocaleString()}</td>
-                            <td>{trade.trade_status}</td>
+                            <td>{trade.userItemFrom.name}</td>
+                            <td>{trade.userItemTo.name}</td>
+                            <td>{new Date(trade.tradeDate).toLocaleString()}</td>
+                            <td>{trade.tradeStatus}</td>
                             <td class="actions">
                             <span class="material-icons" onClick={() => setLocation(`/accept/${1}`)} style={{ cursor: "pointer" }}>
                                 <AcceptIcon />
@@ -95,10 +81,10 @@ const Grid = ({ title, data }: GridProps) => {
             </table>
         </div>
         <div className={styles.footerPagination}>
-            <small>Showing {data.length} entries</small>
+            <small>Showing {trades.length} entries</small>
         </div>
     </>
-    
-)};
+    );
+};
 
 export default AdminTradePage;

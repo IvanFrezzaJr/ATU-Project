@@ -131,9 +131,11 @@ class TradePublic(TradeBase):
 
 
 class TradeList(BaseModel):
-    trades: List[TradePublic]
-
-
+    data: List[TradePublic]
+    totalItems: int
+    itemsPerPage: int
+    currentPage: int
+    totalPages: int
 
 
 class Token(BaseModel):
