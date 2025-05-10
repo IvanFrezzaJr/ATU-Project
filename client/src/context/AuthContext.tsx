@@ -11,16 +11,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: preact.ComponentChildren }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
+  const [isLoading, setIsLoading] = useState(true); 
 
   // Load token from storage and fetch user
   useEffect(() => {
     const savedToken = localStorage.getItem(TOKEN_KEY);
     if (savedToken) {
       setToken(savedToken);
-      fetchUser(savedToken).finally(() => setIsLoading(false)); // Depois de carregar o usuário, termina o carregamento
+      fetchUser(savedToken).finally(() => setIsLoading(false)); 
     } else {
-      setIsLoading(false); // Se não houver token, termina o carregamento
+      setIsLoading(false);
     }
   }, []);
 
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: preact.ComponentChildren 
   };
 
   if (isLoading) {
-    return null; // Retorna null enquanto está carregando ou exibe um carregando...
+    return null; 
   }
 
   return (
