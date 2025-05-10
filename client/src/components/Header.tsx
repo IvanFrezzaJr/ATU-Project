@@ -41,7 +41,7 @@ const Header = () => {
               </li>
               <li className="profile">
                 <Link href="/admin">
-                  <img src={`${apiUrl}${user.image}` || profilePlaceholder} width="40" height="40" alt="User admin" />
+                  <img src={user.image ? `${apiUrl}${user.image}` : profilePlaceholder} width="40" height="40" alt="User admin" />
                 </Link>
               </li>
               

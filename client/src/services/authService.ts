@@ -54,7 +54,11 @@ export const registerUser = async (name: string, email: string, password: string
       body: JSON.stringify({ name, email, password })
   });
 
-  if (!response.ok) throw new Error('Error registering user');
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(`Error registering user: ${data.error}`);
+  }
+
   return await response.json();
 };
 

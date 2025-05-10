@@ -22,6 +22,7 @@ class AddressSchema(BaseModel):
 class UserSchema(BaseModel):
     name: str
     email: EmailStr
+    password: str
     anddress: Optional[AddressSchema] = None
 
 
