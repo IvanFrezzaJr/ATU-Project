@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
@@ -9,6 +11,12 @@ class Message(BaseModel):
     message: str
 
 
+class UserSchema(BaseModel):
+    name: str = Field(..., min_length=3, description="Name must be longer than 3 characters")
+    email: EmailStr
+    password: str = Field(..., min_length=8, description="Password must be at least 8 characters long")
+    anddress: Optional[AddressSchema] = None
+
 
 class AddressSchema(BaseModel):
     street: str
@@ -16,14 +24,6 @@ class AddressSchema(BaseModel):
     state: str
     postalcode: str
     country: str
-
-
-
-class UserSchema(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-    anddress: Optional[AddressSchema] = None
 
 
 class UserUpdateSchema(BaseModel):

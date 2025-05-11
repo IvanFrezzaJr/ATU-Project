@@ -77,7 +77,9 @@ const PaginatedItemList = ({
           userImage={item.user.image}
           userName={item.user.name}
           postDate={item.createdAt}
-          offersCount={2}
+          quantity={item.quantity}
+          status={item.status}
+          tradeType={item.tradeType}
           footerSetup={itemDetailFooterSetup}
         />
       ))}

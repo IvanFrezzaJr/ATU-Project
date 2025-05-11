@@ -84,7 +84,6 @@ def read_items(
     if user_id:
         conditions.append(UserItem.user_id == user_id)
         
-
     # Apply filters
     if conditions:
         base_query = base_query.where(*conditions)

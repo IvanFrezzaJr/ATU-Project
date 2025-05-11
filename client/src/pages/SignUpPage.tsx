@@ -85,7 +85,7 @@ export default function SignUpPage() {
       <div class={styles.content}>
         <div class="viewport">
           <h1 class={styles.center}>Sign Up</h1>
-          <p class={styles.center}>Have an account? <Link href="/Login">Sign In</Link></p>
+          <p class={styles.center}>Have an account? <Link href="/Login"  aria-label="Login website">Sign In</Link></p>
 
 
           {globalMessage && (
@@ -104,6 +104,7 @@ export default function SignUpPage() {
               onChange={handleChange}
               onBlur={() => handleBlur('name')}
               error={errors.name}
+              aria-label="Enter your full name"
             />
             <FormField
               label="Email"
@@ -112,6 +113,7 @@ export default function SignUpPage() {
               onChange={handleChange}
               onBlur={() => handleBlur('email')}
               error={errors.email}
+              aria-label="Enter your email address"
             />
             <FormField
               label="Senha"
@@ -121,6 +123,7 @@ export default function SignUpPage() {
               onChange={handleChange}
               onBlur={() => handleBlur('password')}
               error={errors.password}
+              aria-label="Enter your password"
             />
             <FormField
               label="Confirme a Senha"
@@ -130,9 +133,10 @@ export default function SignUpPage() {
               onChange={handleChange}
               onBlur={() => handleBlur('confirmPassword')}
               error={errors.confirmPassword}
+              aria-label="Confirm your password"
             />
 
-            <button type="submit">Cadastrar</button>
+            <button type="submit" aria-label="Submit registration form">Cadastrar</button> 
           </form>
 
         </div>

@@ -71,7 +71,7 @@ export default function LoginPage() {
         <div class="viewport">
           <h1 class={styles.center}>Sign In</h1>
           <p class={styles.center}>
-            Don't have an account? <Link href="/SignUp">Create one</Link>
+            Don't have an account? <Link href="/SignUp" aria-label="Create an account">Create one</Link>
           </p>
 
           {globalMessage && (
@@ -90,6 +90,7 @@ export default function LoginPage() {
               onChange={handleChange}
               onBlur={() => handleBlur("email")}
               error={errors.email}
+              aria-label="Enter your email address"
             />
             <FormField
               label="Senha"
@@ -99,9 +100,10 @@ export default function LoginPage() {
               onChange={handleChange}
               onBlur={() => handleBlur("password")}
               error={errors.password}
+              aria-label="Enter your password"
             />
 
-            <button type="submit">Entrar</button>
+            <button type="submit" aria-label="Submit login form">Entrar</button>
           </form>
         </div>
       </div>
