@@ -13,7 +13,7 @@ const ItemListPage = () => {
   const [items, setItems] = useState<UserItemResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 2;
+  const itemsPerPage = 5;
 
   const { token, isLoading } = useAuth();
 
