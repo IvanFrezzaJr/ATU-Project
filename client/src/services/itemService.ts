@@ -1,5 +1,6 @@
 import { UserItemResponse, PaginationResult, UserItemRequest } from '../types/item';
 import { camelToSnake, snakeToCamel } from '../utils/caseConverters';
+import { handleApiResponse } from './baseService';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const itemsUrl = `${apiUrl}/items`;
@@ -103,7 +104,7 @@ export const deleteItem = async (id: number, token: string): Promise<void> => {
   });
   
 
-  if (!response.ok) throw new Error('Error deleting item');
+  await handleApiResponse<void>(response); 
 };
 
 /**
