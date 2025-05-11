@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "preact/hooks";
 import { getPaginatedItems } from "../../services/itemService";
-import { PaginationResult, UserItemResponse } from "../../types/item";
+import { UserItemResponse } from "../../types/item";
 import { useAuth } from "../../context/AuthContext";
 import { useLocation } from "wouter-preact";
 
@@ -19,9 +19,9 @@ import { getStatusDisplay } from "../../utils/statusUtils";
 const ItemPage = () => {
   const [items, setItems] = useState<UserItemResponse[]>([]);
   const [, setLocation] = useLocation();
-  const [, setPagination] = useState<PaginationResult<UserItemResponse> | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [, setPagination] = useState<PaginationResult<UserItemResponse> | null>(null);
+  const [currentPage, ] = useState(1);
+  const [, setTotalPages] = useState(1);
   const itemsPerPage = 10;
   
   const { token, user } = useAuth();
