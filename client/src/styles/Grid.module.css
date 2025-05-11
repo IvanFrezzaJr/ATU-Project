@@ -24,3 +24,19 @@
     display: flex;
     gap: 0.5rem;
 }
+
+
+.grid {
+    font-size: 0.6rem;
+    padding-bottom: 2rem;
+}
+
+.grid h2 {
+    padding: 1rem 0;
+    font-size: 1rem;
+}
+
+.grid h3 {
+    font-size: 1rem;
+}
+
