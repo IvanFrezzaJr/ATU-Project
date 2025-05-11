@@ -86,10 +86,22 @@ export const updateItem = async (
  * Deletes an item by ID.
  * @param id - ID of the item to delete.
  */
-export const deleteItem = async (id: number): Promise<void> => {
+export const deleteItem = async (id: number, token: string): Promise<void> => {
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${itemsUrl}/${id}`, {
+    headers,
     method: 'DELETE',
   });
+  
 
   if (!response.ok) throw new Error('Error deleting item');
 };
@@ -101,8 +113,7 @@ export const deleteItem = async (id: number): Promise<void> => {
  */
 export const getPaginatedItems = async ({
   page = 1,
-  itemsPerPage = 10,
-  inOffer = false,
+  itemsPerPage = 2,
   userId,
   token,
 }: GetPaginatedItemsParams): Promise<PaginationResult<UserItemResponse>> => {
@@ -121,8 +132,10 @@ export const getPaginatedItems = async ({
     offset: offset.toString(),
   });
 
-  if (inOffer) query.append('in_offer', 'true');
+
   if (userId) query.append('user_id', userId.toString());
+
+  console.log(`${itemsUrl}/?${query.toString()}`);
 
   const response = await fetch(`${itemsUrl}/?${query.toString()}`, {
     headers,

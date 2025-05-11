@@ -15,6 +15,38 @@ userId?: number | null;
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const tradesUrl = `${apiUrl}/trades/`;
+const tradesOfferFromUrl = `${apiUrl}/trades/offers/from`;
+const tradesOfferToUrl = `${apiUrl}/trades/offers/to`;
+
+type ApiSuccess<T> = T;
+type ApiValidationError = { message: string };
+type ApiResult<T> = ApiSuccess<T>;
+
+export async function handleApiResponse<T>(response: Response): Promise<ApiResult<T>> {
+    const contentType = response.headers.get("Content-Type") || "";
+
+    // success
+    if (response.ok) {
+        if (contentType.includes("application/json")) {
+            return response.json();
+        }
+        return {} as T;
+    }
+
+    // validation
+    let errorMessage = `Erro ${response.status}: ${response.statusText}`;
+
+    if (contentType.includes("application/json")) {
+        const errorBody: ApiValidationError = await response.json().catch(() => ({}));
+        if (errorBody.message) {
+            throw new Error(errorBody.message);
+        }
+    }
+
+    // raw eror
+    throw new Error(errorMessage);
+}
+
 
 /**
  * Cria uma nova troca.
@@ -106,14 +138,7 @@ export const deleteTrade = async (
 };
 
 
-/**
- * Fetches paginated trades.
- * @param page - Page number (starting from 1).
- * @param itemsPerPage - Number of items per page.
- * @param userId - Filter trades by user ID.
- * @param onlyOffer - Filter only trades that are offers.
- * @param token - Optional bearer token for authorization.
- */
+
 export const getPaginatedTrades = async ({
   page = 1,
   itemsPerPage = 10,
@@ -150,3 +175,145 @@ export const getPaginatedTrades = async ({
   const data = await response.json();
   return snakeToCamel(data);
 };
+
+
+
+export const getPaginatedTradesOfferFrom = async ({
+  page = 1,
+  itemsPerPage = 10,
+  userId,
+  token,
+}: PaginatedParams): Promise<PaginationResult<TradeResponse>> => {
+  const offset = (page - 1) * itemsPerPage;
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const query = new URLSearchParams({
+    limit: itemsPerPage.toString(),
+    offset: offset.toString(),
+    ongoing: true.toString(),
+  });
+
+  if (userId) query.append('user_id', userId.toString());
+
+  const response = await fetch(`${tradesOfferFromUrl}?${query.toString()}`, {
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error('Erro ao buscar trocas paginadas');
+  }
+
+  const data = await response.json();
+  return snakeToCamel(data);
+};
+
+
+export const getPaginatedTradesOfferTo = async ({
+  page = 1,
+  itemsPerPage = 10,
+  userId,
+  token,
+}: PaginatedParams): Promise<PaginationResult<TradeResponse>> => {
+  const offset = (page - 1) * itemsPerPage;
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const query = new URLSearchParams({
+    limit: itemsPerPage.toString(),
+    offset: offset.toString(),
+    ongoing: true.toString(),
+  });
+
+  if (userId) query.append('user_id', userId.toString());
+
+
+  const response = await fetch(`${tradesOfferToUrl}?${query.toString()}`, {
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error('Erro ao buscar trocas paginadas');
+  }
+
+  const data = await response.json();
+  return snakeToCamel(data);
+};
+
+
+export const getPaginatedHistory = async ({
+  page = 1,
+  itemsPerPage = 10,
+  userId,
+  token,
+}: PaginatedParams): Promise<PaginationResult<TradeResponse>> => {
+  const offset = (page - 1) * itemsPerPage;
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const query = new URLSearchParams({
+    limit: itemsPerPage.toString(),
+    offset: offset.toString(),
+    ongoing: false.toString(),
+  });
+
+  if (userId) query.append('user_id', userId.toString());
+
+
+  const response = await fetch(`${tradesOfferToUrl}?${query.toString()}`, {
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error('Erro ao buscar trocas paginadas');
+  }
+
+  const data = await response.json();
+  return snakeToCamel(data);
+};
+
+
+
+export async function acceptTrade(id: number, token: string): Promise<void> {
+  const response = await fetch(`${tradesUrl}${id}`, {
+      method: "PUT",
+      headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"trade_status": "accepted"}),
+  });
+
+  await handleApiResponse<void>(response); 
+}
+
+export async function rejectTrade(id: number, token: string): Promise<void> {
+  const response = await fetch(`${tradesUrl}${id}`, {
+      method: "PUT",
+      headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"trade_status": "canceled"}),
+  });
+
+  await handleApiResponse<void>(response); 
+}

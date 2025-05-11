@@ -10,7 +10,7 @@ import styles from '../../styles/Admin.module.css';
 
 import ProfilePage from './AdminProfilePage';
 import ItemPage from './AdminItemPage';
-import AdminTradePage from '../AdminTradePage';
+import AdminTradePage from './AdminTradePage';
 
 const AdminLayout = () => {
   const { section } = useParams();
