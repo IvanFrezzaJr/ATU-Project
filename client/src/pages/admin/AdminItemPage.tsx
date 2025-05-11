@@ -77,12 +77,20 @@ const ItemPage = () => {
           }
       }
   };
+  
 
 
   const handleEdit = async (itemId: number) => {
       if (!token) return;
       setLocation(`/items/${itemId}`)
   };
+
+
+  const handleCreate = async () => {
+    if (!token) return;
+    
+    setLocation("/items/new")
+  }
 
   return (
     <main>
@@ -99,7 +107,7 @@ const ItemPage = () => {
           <div className={styles.title}>
             <h2>Item Page</h2>
           </div>
-          <button onClick={() => setLocation("/items/new")}><CreateIcon /> Create Item</button>
+          <button onClick={() => handleCreate()}><CreateIcon /> Create Item</button>
         </div>
 
         <div className={styles.grid}>

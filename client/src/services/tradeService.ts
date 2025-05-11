@@ -2,6 +2,7 @@
 
 import { TradePublic, TradeCreateSchema, TradeUpdateSchema, TradeList, Message, TradeResponse, PaginationResult  } from '../types/trade';
 import { camelToSnake, snakeToCamel } from '../utils/caseConverters';
+import { handleApiResponse } from './baseService';
 
 interface PaginatedParams {
 page: number;
@@ -11,41 +12,10 @@ onlyOffer?: boolean;
 userId?: number | null;
 }
 
-
-
 const apiUrl = import.meta.env.VITE_API_URL;
 const tradesUrl = `${apiUrl}/trades/`;
 const tradesOfferFromUrl = `${apiUrl}/trades/offers/from`;
 const tradesOfferToUrl = `${apiUrl}/trades/offers/to`;
-
-type ApiSuccess<T> = T;
-type ApiValidationError = { message: string };
-type ApiResult<T> = ApiSuccess<T>;
-
-export async function handleApiResponse<T>(response: Response): Promise<ApiResult<T>> {
-    const contentType = response.headers.get("Content-Type") || "";
-
-    // success
-    if (response.ok) {
-        if (contentType.includes("application/json")) {
-            return response.json();
-        }
-        return {} as T;
-    }
-
-    // validation
-    let errorMessage = `Erro ${response.status}: ${response.statusText}`;
-
-    if (contentType.includes("application/json")) {
-        const errorBody: ApiValidationError = await response.json().catch(() => ({}));
-        if (errorBody.message) {
-            throw new Error(errorBody.message);
-        }
-    }
-
-    // raw eror
-    throw new Error(errorMessage);
-}
 
 
 /**

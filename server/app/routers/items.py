@@ -7,11 +7,11 @@ from pathlib import Path
 import shutil
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select, func
+from sqlalchemy import or_, select, func
 from sqlalchemy.orm import Session, selectinload
 
 from app.database import get_session
-from app.models import ItemStatusEnum, UserItem, User
+from app.models import ItemStatusEnum, Trade, UserItem, User
 from app.schemas import (
     ItemCreateSchema,
     ItemUpdateSchema,
@@ -178,6 +178,18 @@ def delete_item(
         raise HTTPException(
             status_code=HTTPStatus.FORBIDDEN,
             detail='Permission denied',
+        )
+    
+    trade_found = (
+        session.query(Trade)
+        .where(or_(
+            Trade.user_item_id_from == item_id, 
+            Trade.user_item_id_to == item_id)))
+
+    if trade_found:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail='There is a trade ongoing or completed for this item',
         )
 
     session.delete(item)

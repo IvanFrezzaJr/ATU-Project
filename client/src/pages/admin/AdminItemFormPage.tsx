@@ -10,6 +10,7 @@ import { FormField } from "../../components/FormField";
 import { GlobalMessage } from "../../components/GlobalMessage";
 import { useFormErrors } from "../../hooks/useFormErrors";
 import { validateName } from "../../utils/validators";
+import styles from '../../styles/Grid.module.css';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -103,7 +104,7 @@ export default function ItemFormPage() {
       }
 
       setGlobalMessage({ type: "success", text: id ? "Item updated" : "Item created" });
-      navigate("/items");
+      navigate("/admin/items");
     } catch (error) {
       console.error("Error saving item:", error);
       setGlobalMessage({ type: "error", text: "Failed to save item." });
@@ -114,93 +115,93 @@ export default function ItemFormPage() {
     <div>
       <Header />
       <main>
-        <div class="viewport">
-          <div class="grid flex-between">
-            <div><h1>{id ? "Edit Item" : "Create Item"}</h1></div>
-            <div><button onClick={() => navigate("/admin/items")}>Voltar</button></div>
-          </div>
-          {globalMessage && (
-            <GlobalMessage
-              type={globalMessage.type}
-              message={globalMessage.text}
-              onClose={() => setGlobalMessage(null)}
-            />
-          )}
+          <div class="viewport margin-top">
+            <div class="grid flex-between margin-bottom">
+              <div><h1>{id ? "Edit Item" : "Create Item"}</h1></div>
+              <div><button onClick={() => navigate("/admin/items")}>Back</button></div>
+            </div>
+            {globalMessage && (
+              <GlobalMessage
+                type={globalMessage.type}
+                message={globalMessage.text}
+                onClose={() => setGlobalMessage(null)}
+              />
+            )}
 
-          <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
 
 
-            <FormField
-              label="Name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              onBlur={() => handleBlur("name")}
-              error={errors.name}
-            />
+              <FormField
+                label="Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                onBlur={() => handleBlur("name")}
+                error={errors.name}
+              />
 
-            <FormField
-              label="Description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-            />
+              <FormField
+                label="Description"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+              />
 
-            <label>Status</label>
-            <fieldset>
-              <div class="grid">
-                <label><input type="radio" name="status" value={ItemStatus.InOffer} checked={form.status === ItemStatus.InOffer} onChange={() => setForm({ ...form, status: ItemStatus.InOffer })} /> In offer</label>
-                <label><input type="radio" name="status" value={ItemStatus.NotListed} checked={form.status === ItemStatus.NotListed} onChange={() => setForm({ ...form, status: ItemStatus.NotListed })} /> Not listed</label>
-                <label><input type="radio" name="status" value={ItemStatus.OfferAgreed} checked={form.status === ItemStatus.OfferAgreed} onChange={() => setForm({ ...form, status: ItemStatus.OfferAgreed })} /> Offer agreed</label>
-              </div>
-            </fieldset>
-
-            <label>Trade Type</label>
-            <fieldset>
-              <div class="grid">
-                <label><input type="radio" name="tradeType" value={TradeType.post} checked={form.tradeType === TradeType.post} onChange={() => setForm({ ...form, tradeType: TradeType.post })} /> Post</label>
-                <label><input type="radio" name="tradeType" value={TradeType.delivery} checked={form.tradeType === TradeType.delivery} onChange={() => setForm({ ...form, tradeType: TradeType.delivery })} /> Delivery</label>
-                <label><input type="radio" name="tradeType" value={TradeType.pickup} checked={form.tradeType === TradeType.pickup} onChange={() => setForm({ ...form, tradeType: TradeType.pickup })} /> Pickup</label>
-              </div>
-            </fieldset>
-
-            <FormField
-              label="Quantity"
-              name="quantity"
-              type="number"
-              value={form.quantity.toString()}
-              onChange={handleChange}
-            />
-
-            <label for="file">Images</label>
-            <input type="file" id="file" accept="image/*" multiple onChange={handleFileChange} />
-
-            <div>
-              {form.images.map((img, index) => (
-                <div class="upload-image-container" key={index}>
-                  <button
-                    class="upload-close-button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setForm({
-                        ...form,
-                        images: form.images.filter((_, i) => i !== index),
-                      });
-                    }}
-                  >
-                    ❌
-                  </button>
-                  <img src={`${apiUrl}${img}`} alt={`Item ${index}`} />
+              <label>Status</label>
+              <fieldset>
+                <div class="grid">
+                  <label><input type="radio" name="status" value={ItemStatus.InOffer} checked={form.status === ItemStatus.InOffer} onChange={() => setForm({ ...form, status: ItemStatus.InOffer })} /> In offer</label>
+                  <label><input type="radio" name="status" value={ItemStatus.NotListed} checked={form.status === ItemStatus.NotListed} onChange={() => setForm({ ...form, status: ItemStatus.NotListed })} /> Not listed</label>
+                  <label><input type="radio" name="status" value={ItemStatus.OfferAgreed} checked={form.status === ItemStatus.OfferAgreed} onChange={() => setForm({ ...form, status: ItemStatus.OfferAgreed })} /> Offer agreed</label>
                 </div>
-              ))}
-            </div>
+              </fieldset>
 
-            <div>
-              <button type="submit">{id ? "Update" : "Create"}</button>
-            </div>
+              <label>Trade Type</label>
+              <fieldset>
+                <div class="grid">
+                  <label><input type="radio" name="tradeType" value={TradeType.post} checked={form.tradeType === TradeType.post} onChange={() => setForm({ ...form, tradeType: TradeType.post })} /> Post</label>
+                  <label><input type="radio" name="tradeType" value={TradeType.delivery} checked={form.tradeType === TradeType.delivery} onChange={() => setForm({ ...form, tradeType: TradeType.delivery })} /> Delivery</label>
+                  <label><input type="radio" name="tradeType" value={TradeType.pickup} checked={form.tradeType === TradeType.pickup} onChange={() => setForm({ ...form, tradeType: TradeType.pickup })} /> Pickup</label>
+                </div>
+              </fieldset>
 
-          </form>
-        </div>
+              <FormField
+                label="Quantity"
+                name="quantity"
+                type="number"
+                value={form.quantity.toString()}
+                onChange={handleChange}
+              />
+
+              <label for="file">Images</label>
+              <input type="file" id="file" accept="image/*" multiple onChange={handleFileChange} />
+
+              <div>
+                {form.images.map((img, index) => (
+                  <div class="upload-image-container" key={index}>
+                    <button
+                      class="upload-close-button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setForm({
+                          ...form,
+                          images: form.images.filter((_, i) => i !== index),
+                        });
+                      }}
+                    >
+                      ❌
+                    </button>
+                    <img src={`${apiUrl}${img}`} alt={`Item ${index}`} />
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <button type="submit">{id ? "Update" : "Create"}</button>
+              </div>
+
+            </form>
+          </div>
       </main>
       <Footer />
     </div>
