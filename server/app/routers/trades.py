@@ -51,7 +51,7 @@ def create_trade(
                 Trade.user_item_id_to == trade.user_item_id_to,
                 Trade.trade_status.in_(statuses),
             )
-        )
+        ).first()
     )
 
     if trade_found:

@@ -238,9 +238,13 @@ def delete_item(
     
     trade_found = (
         session.query(Trade)
-        .where(or_(
-            Trade.user_item_id_from == item_id, 
-            Trade.user_item_id_to == item_id)))
+        .where(
+            or_(
+                Trade.user_item_id_from == item_id, 
+                Trade.user_item_id_to == item_id
+            )
+        ).first()
+    )
 
     if trade_found:
         raise HTTPException(
