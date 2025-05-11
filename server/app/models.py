@@ -15,7 +15,6 @@ class ItemStatusEnum(enum.Enum):
     in_offer = 'in_offer'
     not_listed = 'not_listed'
 
-
 class TradeStatusEnum(enum.Enum):
     opened = 'opened'
     closed = 'closed'
@@ -90,9 +89,6 @@ class UserItem:
 @table_registry.mapped_as_dataclass
 class Trade:
     __tablename__ = 'trade'
-    __table_args__ = (
-        UniqueConstraint('user_item_id_from', 'user_item_id_to', name='trade_user_item_ids_unique'),
-    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
 

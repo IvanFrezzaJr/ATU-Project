@@ -15,6 +15,8 @@ import { useParams } from 'wouter-preact';
 import { UserItemResponse } from '../types/item';
 import { createTrade } from '../services/tradeService';
 import { useAuth } from '../context/AuthContext';
+import { GlobalMessage } from '../components/GlobalMessage';
+import { scrollToTop } from '../utils/scroll';
 
 interface Address{
     street: string;
@@ -45,7 +47,8 @@ const TradePage = () => {
     const [item, setItem] = useState<UserItemResponse | null>(null);
     const [offerItem, setOffetItem] = useState<UserItemResponse | null>(null);
     const [, navigate] = useLocation(); 
-    
+    const [globalMessage, setGlobalMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
     const { token } = useAuth();
 
     useEffect(() => {
@@ -93,19 +96,22 @@ const TradePage = () => {
         
         if (!item || !offerItem) return;
 
+       
         try {
             await createTrade({
                 userItemIdFrom: offerItem.id,
                 userItemIdTo: item.id,
                 tradeStatus: 'pending',
             });
-    
             navigate('/confirm');
-        } catch (error) {
-            console.error('Erro ao criar troca:', error);
-            alert('Erro ao criar troca. Tente novamente.');
+        } catch (error) {            
+            if (error instanceof Error) {
+                setGlobalMessage({ type: 'error', text: error.message});
+            } else {
+                setGlobalMessage({ type: 'error', text: "Unexpected error. Contact the system admin."});
+            }
+            scrollToTop();
         }
-
       };
 
 
@@ -119,6 +125,13 @@ const TradePage = () => {
             <Header />
             <main>
                 <div class="viewport">
+                    {globalMessage && (
+                    <GlobalMessage
+                        type={globalMessage.type}
+                        message={globalMessage.text}
+                        onClose={() => setGlobalMessage(null)}
+                    />
+                    )}   
                     <div className={style["content"]}>
                         <h1 class="center">You will trade this item:</h1>
                         <ItemDetailCard
