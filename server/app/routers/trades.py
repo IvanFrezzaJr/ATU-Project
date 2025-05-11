@@ -35,6 +35,32 @@ def create_trade(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='One or both user items not found',
         )
+    
+
+    statuses = [
+        TradeStatusEnum.pending,
+        TradeStatusEnum.opened,
+        TradeStatusEnum.accepted,
+        TradeStatusEnum.completed]
+
+    trade_found = (
+        session.query(Trade)
+        .where(
+            and_(
+                Trade.user_item_id_from == trade.user_item_id_from,
+                Trade.user_item_id_to == trade.user_item_id_to,
+                Trade.trade_status.in_(statuses),
+            )
+        )
+    )
+
+    if trade_found:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail='There is a trading ongoing with these items',
+        )
+
+
 
     db_trade = Trade(
         user_item_id_from=trade.user_item_id_from,

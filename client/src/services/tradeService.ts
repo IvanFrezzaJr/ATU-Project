@@ -32,8 +32,8 @@ export const createTrade = async (
     body: JSON.stringify(camelToSnake(trade)),
   });
 
-  if (!response.ok) throw new Error('Erro ao criar a troca');
-  const data = await response.json();
+  const data = await handleApiResponse<void>(response); 
+
   return snakeToCamel(data);
 };
 
