@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { useLocation } from "wouter-preact";
 import { useAuth } from "../context/AuthContext";
-import { TradeResponse, PaginationResult } from "../types/trade";
+import { TradeResponse } from "../types/trade";
 import { getPaginatedTrades } from "../services/tradeService";
 
 import AcceptIcon from '@mui/icons-material/PublishedWithChanges';
@@ -10,8 +10,8 @@ import styles from "../styles/Grid.module.css";
 
 const AdminTradePage = () => {
     const [trades, setTrades] = useState<TradeResponse[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, ] = useState(1);
+    const [, setTotalPages] = useState(1);
     const itemsPerPage = 10;
 
     const { token, user } = useAuth();
