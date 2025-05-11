@@ -243,7 +243,7 @@ def read_trade_items(
 
 
 @router.get('/history', response_model=TradeList)
-def read_trade_items(
+def read_trade_history(
     session: T_Session, 
     limit: int = 10, 
     offset: int = 0,
@@ -273,7 +273,10 @@ def read_trade_items(
 
 
     if user_id:
-        conditions.append(UserItemTo.user_id == user_id)
+        conditions.append(or_(
+            UserItemTo.user_id == user_id,
+            UserItemFrom.user_id == user_id
+        ))
    
 
     if conditions:
@@ -342,20 +345,7 @@ def update_trade(
     if (update_data.trade_status == TradeStatusEnum.accepted 
         or update_data.trade_status == TradeStatusEnum.completed):
 
-        # start trade operation        
-        user_item_from = session.get(UserItem, trade.user_item_id_from)
-        user_item_to = session.get(UserItem, trade.user_item_id_to)
-
-        # change item users
-        from_user_id = user_item_from.user_id
-        to_user_id = user_item_to.user_id
-
-        user_item_from.user_id = to_user_id
-        user_item_to.user_id = from_user_id
-
-        # update item status
-        user_item_from.status = ItemStatusEnum.offer_agreed
-        user_item_to.status = ItemStatusEnum.offer_agreed
+        _update_items_accepted(session, trade.user_item_id_from, trade.user_item_id_to)
 
     session.commit()
     session.refresh(trade)
@@ -377,3 +367,19 @@ def delete_trade(trade_id: int, session: T_Session):
 
     return {'message': 'Trade deleted'}
 
+
+def _update_items_accepted(session, item_id_from: int, item_id_to: int):
+    # start trade operation        
+    user_item_from = session.get(UserItem, item_id_from)
+    user_item_to = session.get(UserItem, item_id_to)
+
+    # change item users
+    from_user_id = user_item_from.user_id
+    to_user_id = user_item_to.user_id
+
+    user_item_from.user_id = to_user_id
+    user_item_to.user_id = from_user_id
+
+    # update item status
+    user_item_from.status = ItemStatusEnum.offer_agreed
+    user_item_to.status = ItemStatusEnum.offer_agreed
