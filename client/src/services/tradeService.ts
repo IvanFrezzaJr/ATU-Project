@@ -16,6 +16,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const tradesUrl = `${apiUrl}/trades/`;
 const tradesOfferFromUrl = `${apiUrl}/trades/offers/from`;
 const tradesOfferToUrl = `${apiUrl}/trades/offers/to`;
+const tradesHistoryUrl = `${apiUrl}/trades/history`;
 
 
 /**
@@ -248,7 +249,7 @@ export const getPaginatedHistory = async ({
   if (userId) query.append('user_id', userId.toString());
 
 
-  const response = await fetch(`${tradesOfferToUrl}?${query.toString()}`, {
+  const response = await fetch(`${tradesHistoryUrl}?${query.toString()}`, {
     headers,
   });
 

@@ -7,7 +7,7 @@ from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import Session, selectinload, aliased
 
 from app.database import get_session
-from app.models import Trade, UserItem, TradeStatusEnum
+from app.models import Trade, UserItem, TradeStatusEnum, ItemStatusEnum
 from app.schemas import (
     TradeCreateSchema,
     TradeUpdateSchema,
@@ -242,7 +242,7 @@ def read_trade_items(
     }
 
 
-@router.get('/offers/history', response_model=TradeList)
+@router.get('/history', response_model=TradeList)
 def read_trade_items(
     session: T_Session, 
     limit: int = 10, 
@@ -265,7 +265,7 @@ def read_trade_items(
     )
 
     conditions = []
-    if ongoing:
+    if not ongoing:
         conditions.append(and_(
             Trade.trade_status != TradeStatusEnum.opened,
             Trade.trade_status != TradeStatusEnum.pending
@@ -309,7 +309,6 @@ def read_trade_items(
 
 
 
-
 @router.get('/{trade_id}', response_model=TradePublic)
 def read_trade(trade_id: int, session: T_Session):
     trade = session.get(Trade, trade_id)
@@ -336,9 +335,27 @@ def update_trade(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Trade not found',
         )
-
+    
     for field, value in update_data.model_dump(exclude_unset=True).items():
         setattr(trade, field, value)
+
+    if (update_data.trade_status == TradeStatusEnum.accepted 
+        or update_data.trade_status == TradeStatusEnum.completed):
+
+        # start trade operation        
+        user_item_from = session.get(UserItem, trade.user_item_id_from)
+        user_item_to = session.get(UserItem, trade.user_item_id_to)
+
+        # change item users
+        from_user_id = user_item_from.user_id
+        to_user_id = user_item_to.user_id
+
+        user_item_from.user_id = to_user_id
+        user_item_to.user_id = from_user_id
+
+        # update item status
+        user_item_from.status = ItemStatusEnum.offer_agreed
+        user_item_to.status = ItemStatusEnum.offer_agreed
 
     session.commit()
     session.refresh(trade)
