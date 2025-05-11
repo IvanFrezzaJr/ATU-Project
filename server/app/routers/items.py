@@ -117,6 +117,62 @@ def read_items(
 
 
 
+@router.get('/offers', response_model=ItemList)
+def read_items(
+    session: T_Session,
+    limit: int = Query(10, gt=0),
+    offset: int = Query(0, ge=0),
+    user_id: Optional[int] = Query(None),
+):
+
+    total_items = 0
+    query = None
+
+    base_query = select(UserItem).options(selectinload(UserItem.user))
+
+    # add conditions
+    conditions = []
+    conditions.append(UserItem.status == ItemStatusEnum.in_offer)
+
+
+    if user_id:
+        conditions.append(UserItem.user_id == user_id)
+        
+    # Apply filters
+    if conditions:
+        base_query = base_query.where(*conditions)
+
+    # pagination
+    query = base_query.limit(limit).offset(offset)
+
+    # aggregation
+    count_query = select(func.count()).select_from(UserItem)
+    if conditions:
+        count_query = count_query.where(*conditions)
+
+    total_items = session.scalar(count_query)
+
+    if query  is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Items not found',
+        )
+
+    
+    items = session.scalars(query).all()
+
+    return {
+        'data': items,
+        'totalItems': total_items,
+        'itemsPerPage': limit,
+        'currentPage': (offset // limit) + 1,
+        'totalPages': (total_items + limit - 1) // limit,
+    }
+
+
+
+
+
 @router.get('/{item_id}', response_model=ItemPublic)
 def read_item(item_id: int, session: T_Session):
     item = session.get(UserItem, item_id)
