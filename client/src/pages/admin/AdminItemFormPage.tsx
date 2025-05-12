@@ -10,7 +10,6 @@ import { FormField } from "../../components/FormField";
 import { GlobalMessage } from "../../components/GlobalMessage";
 import { useFormErrors } from "../../hooks/useFormErrors";
 import { validateName } from "../../utils/validators";
-import styles from '../../styles/Grid.module.css';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
