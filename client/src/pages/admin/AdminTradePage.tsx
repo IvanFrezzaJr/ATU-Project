@@ -138,8 +138,9 @@ const AdminTradePage = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Your item</th>
+                                        <th>Your Item</th>
                                         <th>Trade for</th>
+                                        <th>Owner</th>
                                         <th>Trade Date</th>
                                         <th>Status</th>
                                     </tr>
@@ -148,8 +149,9 @@ const AdminTradePage = () => {
                                     {tradesTo && tradesTo.length > 0 ? tradesTo.map((trade) => (
                                         <tr key={trade.id}>
                                             <td>{trade.id}</td>
-                                            <td>{trade.userItemFrom.name}</td>
                                             <td>{trade.userItemTo.name}</td>
+                                            <td>{trade.userItemFrom.name}</td>
+                                            <td>{trade.userItemFrom.user.name}</td>
                                             <td>{new Date(trade.tradeDate).toLocaleString()}</td>
                                             <td>{trade.tradeStatus}</td>
                                         </tr>
@@ -171,8 +173,9 @@ const AdminTradePage = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Your item</th>
+                                        <th>Trade Item</th>
                                         <th>Trade for</th>
+                                        <th>Owner</th>
                                         <th>Trade Date</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -184,6 +187,7 @@ const AdminTradePage = () => {
                                             <td>{trade.id}</td>
                                             <td>{trade.userItemFrom.name}</td>
                                             <td>{trade.userItemTo.name}</td>
+                                            <td>{trade.userItemTo.user.name}</td>
                                             <td>{new Date(trade.tradeDate).toLocaleString()}</td>
                                             <td>{trade.tradeStatus}</td>
                                             <td class="actions">
@@ -212,8 +216,10 @@ const AdminTradePage = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Your item</th>
-                                        <th>Trade for</th>
+                                        <th>Item</th>
+                                        <th>Owner</th>
+                                        <th>To</th>
+                                        <th>Owner</th>
                                         <th>Trade Date</th>
                                         <th>Status</th>
                                     </tr>
@@ -223,7 +229,9 @@ const AdminTradePage = () => {
                                         <tr key={trade.id}>
                                             <td>{trade.id}</td>
                                             <td>{trade.userItemFrom.name}</td>
+                                            <td>{trade.userItemTo.user.name}</td>
                                             <td>{trade.userItemTo.name}</td>
+                                            <td>{trade.userItemFrom.user.name}</td>
                                             <td>{new Date(trade.tradeDate).toLocaleString()}</td>
                                             <td>{trade.tradeStatus}</td>
                                         </tr>

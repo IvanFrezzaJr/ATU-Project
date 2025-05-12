@@ -25,6 +25,7 @@ export interface ItemResponse {
     imagesPath: string[];
     createdAt: Date;
     updatedAt: Date;
+    user: User
 }
 
 
