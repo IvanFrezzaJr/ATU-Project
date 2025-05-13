@@ -4,18 +4,17 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import and_, func, or_, select
-from sqlalchemy.orm import Session, selectinload, aliased
+from sqlalchemy.orm import Session, aliased, selectinload
 
 from app.database import get_session
-from app.models import Trade, UserItem, TradeStatusEnum, ItemStatusEnum
+from app.models import ItemStatusEnum, Trade, TradeStatusEnum, UserItem
 from app.schemas import (
-    TradeCreateSchema,
-    TradeUpdateSchema,
-    TradePublic,
-    TradeList,
     Message,
+    TradeCreateSchema,
+    TradeList,
+    TradePublic,
+    TradeUpdateSchema,
 )
-from app.security import get_current_user
 
 router = APIRouter(prefix='/trades', tags=['trades'])
 
@@ -35,13 +34,13 @@ def create_trade(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='One or both user items not found',
         )
-    
 
     statuses = [
         TradeStatusEnum.pending,
         TradeStatusEnum.opened,
         TradeStatusEnum.accepted,
-        TradeStatusEnum.completed]
+        TradeStatusEnum.completed,
+    ]
 
     trade_found = (
         session.query(Trade)
@@ -51,7 +50,8 @@ def create_trade(
                 Trade.user_item_id_to == trade.user_item_id_to,
                 Trade.trade_status.in_(statuses),
             )
-        ).first()
+        )
+        .first()
     )
 
     if trade_found:
@@ -59,8 +59,6 @@ def create_trade(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='There is a trading ongoing with these items',
         )
-
-
 
     db_trade = Trade(
         user_item_id_from=trade.user_item_id_from,
@@ -78,12 +76,12 @@ def create_trade(
 
 @router.get('/', response_model=TradeList)
 def read_trades(
-    session: T_Session, 
-    limit: int = 10, 
+    session: T_Session,
+    limit: int = 10,
     offset: int = 0,
     user_id: int = Query(False),
-    only_offer: bool = Query(False)):
-
+    only_offer: bool = Query(False),
+):
     UserItemFrom = aliased(UserItem)
     UserItemTo = aliased(UserItem)
 
@@ -117,14 +115,12 @@ def read_trades(
 
     total_items = session.scalar(count_query)
 
-
-    if query  is None:
+    if query is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Items not found',
         )
 
-    
     items = session.scalars(query).all()
 
     return {
@@ -138,13 +134,12 @@ def read_trades(
 
 @router.get('/offers/from', response_model=TradeList)
 def read_trade_offers(
-    session: T_Session, 
-    limit: int = 10, 
+    session: T_Session,
+    limit: int = 10,
     offset: int = 0,
     user_id: int = Query(False),
-    ongoing: bool = Query(False)):
-
-
+    ongoing: bool = Query(False),
+):
     UserItemFrom = aliased(UserItem)
     UserItemTo = aliased(UserItem)
 
@@ -161,14 +156,15 @@ def read_trade_offers(
     conditions = []
 
     if ongoing:
-        conditions.append(or_(
-            Trade.trade_status == TradeStatusEnum.opened,
-            Trade.trade_status == TradeStatusEnum.pending
-        ))
+        conditions.append(
+            or_(
+                Trade.trade_status == TradeStatusEnum.opened,
+                Trade.trade_status == TradeStatusEnum.pending,
+            )
+        )
 
     if user_id:
         conditions.append(UserItemFrom.user_id == user_id)
-   
 
     if conditions:
         base_query = base_query.where(*conditions)
@@ -183,14 +179,12 @@ def read_trade_offers(
 
     total_items = session.scalar(count_query)
 
-
-    if query  is None:
+    if query is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Items not found',
         )
 
-    
     items = session.scalars(query).all()
 
     return {
@@ -204,13 +198,12 @@ def read_trade_offers(
 
 @router.get('/offers/to', response_model=TradeList)
 def read_trade_items(
-    session: T_Session, 
-    limit: int = 10, 
+    session: T_Session,
+    limit: int = 10,
     offset: int = 0,
     user_id: int = Query(False),
-    ongoing: bool = Query(False)):
-
-
+    ongoing: bool = Query(False),
+):
     UserItemFrom = aliased(UserItem)
     UserItemTo = aliased(UserItem)
 
@@ -226,15 +219,15 @@ def read_trade_items(
 
     conditions = []
     if ongoing:
-        conditions.append(or_(
-            Trade.trade_status == TradeStatusEnum.opened,
-            Trade.trade_status == TradeStatusEnum.pending
-        ))
-
+        conditions.append(
+            or_(
+                Trade.trade_status == TradeStatusEnum.opened,
+                Trade.trade_status == TradeStatusEnum.pending,
+            )
+        )
 
     if user_id:
         conditions.append(UserItemTo.user_id == user_id)
-   
 
     if conditions:
         base_query = base_query.where(*conditions)
@@ -249,14 +242,12 @@ def read_trade_items(
 
     total_items = session.scalar(count_query)
 
-
-    if query  is None:
+    if query is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Items not found',
         )
 
-    
     items = session.scalars(query).all()
 
     return {
@@ -270,13 +261,12 @@ def read_trade_items(
 
 @router.get('/history', response_model=TradeList)
 def read_trade_history(
-    session: T_Session, 
-    limit: int = 10, 
+    session: T_Session,
+    limit: int = 10,
     offset: int = 0,
     user_id: int = Query(False),
-    ongoing: bool = Query(False)):
-
-
+    ongoing: bool = Query(False),
+):
     UserItemFrom = aliased(UserItem)
     UserItemTo = aliased(UserItem)
 
@@ -292,18 +282,17 @@ def read_trade_history(
 
     conditions = []
     if not ongoing:
-        conditions.append(and_(
-            Trade.trade_status != TradeStatusEnum.opened,
-            Trade.trade_status != TradeStatusEnum.pending
-        ))
-
+        conditions.append(
+            and_(
+                Trade.trade_status != TradeStatusEnum.opened,
+                Trade.trade_status != TradeStatusEnum.pending,
+            )
+        )
 
     if user_id:
-        conditions.append(or_(
-            UserItemTo.user_id == user_id,
-            UserItemFrom.user_id == user_id
-        ))
-   
+        conditions.append(
+            or_(UserItemTo.user_id == user_id, UserItemFrom.user_id == user_id)
+        )
 
     if conditions:
         base_query = base_query.where(*conditions)
@@ -318,14 +307,12 @@ def read_trade_history(
 
     total_items = session.scalar(count_query)
 
-
-    if query  is None:
+    if query is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Items not found',
         )
 
-    
     items = session.scalars(query).all()
 
     return {
@@ -335,7 +322,6 @@ def read_trade_history(
         'currentPage': (offset // limit) + 1,
         'totalPages': (total_items + limit - 1) // limit,
     }
-
 
 
 @router.get('/{trade_id}', response_model=TradePublic)
@@ -364,14 +350,17 @@ def update_trade(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Trade not found',
         )
-    
+
     for field, value in update_data.model_dump(exclude_unset=True).items():
         setattr(trade, field, value)
 
-    if (update_data.trade_status == TradeStatusEnum.accepted 
-        or update_data.trade_status == TradeStatusEnum.completed):
-
-        _update_items_accepted(session, trade.user_item_id_from, trade.user_item_id_to)
+    if (
+        update_data.trade_status == TradeStatusEnum.accepted
+        or update_data.trade_status == TradeStatusEnum.completed
+    ):
+        _update_items_accepted(
+            session, trade.user_item_id_from, trade.user_item_id_to
+        )
 
     session.commit()
     session.refresh(trade)
@@ -395,7 +384,7 @@ def delete_trade(trade_id: int, session: T_Session):
 
 
 def _update_items_accepted(session, item_id_from: int, item_id_to: int):
-    # start trade operation        
+    # start trade operation
     user_item_from = session.get(UserItem, item_id_from)
     user_item_to = session.get(UserItem, item_id_to)
 
