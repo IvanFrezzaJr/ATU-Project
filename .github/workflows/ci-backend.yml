@@ -1,0 +1,42 @@
+name: Backend CI (FastAPI + Poetry)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend:
+    name: Python FastAPI (Poetry)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies with Poetry
+        run: poetry install --no-interaction --no-root
+
+      - name: Run Ruff (linter + checker)
+        run: poetry run ruff check .
+
+      - name: Run MyPy (type checking)
+        run: poetry run mypy .
+
+      - name: Run Tests (pytest)
+        run: poetry run pytest --cov=tests -vv
