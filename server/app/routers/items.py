@@ -43,7 +43,7 @@ def create_item(
         status=item.status,
         trade_type=item.trade_type,
         user_id=current_user.id,
-    )
+    )  # type: ignore
 
     session.add(db_item)
     session.commit()

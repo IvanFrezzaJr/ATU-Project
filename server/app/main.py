@@ -18,7 +18,7 @@ api.include_router(items.router)
 api.include_router(trades.router)
 api.include_router(auth.router)
 
-api.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+api.mount('/uploads', StaticFiles(directory='uploads'), name='uploads')
 
 
 @api.get('/', status_code=HTTPStatus.OK, response_model=Message)

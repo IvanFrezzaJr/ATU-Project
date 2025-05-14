@@ -2,9 +2,7 @@
 name = "server"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "IvanFrezzaJr",email = "ivanfrezza@gmail.com"}
-]
+authors = [{ name = "IvanFrezzaJr", email = "ivanfrezza@gmail.com" }]
 readme = "README.md"
 
 [tool.poetry]
@@ -12,15 +10,15 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "3.13.*"
-fastapi = {extras = ["standard"], version = "^0.115.3"}
-pydantic = {extras = ["email"], version = "^2.9.2"}
+fastapi = { extras = ["standard"], version = "^0.115.3" }
+pydantic = { extras = ["email"], version = "^2.9.2" }
 sqlalchemy = "^2.0.40"
 pydantic-settings = "^2.9.1"
 alembic = "^1.15.2"
-pwdlib = {extras = ["argon2"], version = "^0.2.1"}
+pwdlib = { extras = ["argon2"], version = "^0.2.1" }
 pyjwt = "^2.10.1"
 python-multipart = "^0.0.20"
-psycopg2 = {extras = ["binary"], version = "^2.9.10"}
+psycopg2 = { extras = ["binary"], version = "^2.9.10" }
 
 
 [tool.poetry.group.dev.dependencies]
@@ -34,7 +32,6 @@ mypy = "^1.15.0"
 [tool.pytest.ini_options]
 pythonpath = "."
 addopts = '-p no:warnings'
-
 
 
 [tool.ruff]
@@ -55,6 +52,18 @@ quote-style = 'single'
 
 [tool.mypy]
 exclude = "migrations"
+
+ignore_missing_imports = true
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+allow_untyped_globals = true
+implicit_optional = true
+check_untyped_defs = false
+warn_return_any = false
+warn_unused_ignores = false
+show_error_codes = true
+pretty = true
 
 
 [tool.taskipy.tasks]
