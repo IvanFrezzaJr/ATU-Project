@@ -1,25 +1,24 @@
-import { useEffect, useState } from 'preact/hooks';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import ItemList from '../components/ItemList';
-import style from '../styles/ItemDetail.module.css';
+import { useEffect, useState } from 'preact/hooks'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import ItemList from '../components/ItemList'
+import style from '../styles/ItemDetail.module.css'
 
-import { getPaginatedItems } from '../services/itemService';
-import { PageType } from '../types/page';
-import { UserItemResponse } from '../types/item';
-import { useAuth } from '../context/AuthContext';
+import { getPaginatedItems } from '../services/itemService'
+import { PageType } from '../types/page'
+import { UserItemResponse } from '../types/item'
+import { useAuth } from '../context/AuthContext'
 
 const ItemListPage = () => {
-  const [items, setItems] = useState<UserItemResponse[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 5;
+  const [items, setItems] = useState<UserItemResponse[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const itemsPerPage = 5
 
-  const { token, isLoading } = useAuth();
-
+  const { token, isLoading } = useAuth()
 
   useEffect(() => {
-    if (isLoading) return; 
+    if (isLoading) return
 
     if (!token) {
       const fetchItems = async () => {
@@ -27,21 +26,20 @@ const ItemListPage = () => {
           const result = await getPaginatedItems({
             page: currentPage,
             itemsPerPage,
-          });
-          setItems(result.data);
-          setTotalPages(result.totalPages);
-          setCurrentPage(result.currentPage);
-
+          })
+          setItems(result.data)
+          setTotalPages(result.totalPages)
+          setCurrentPage(result.currentPage)
         } catch (error) {
-          console.error('Erro ao buscar itens:', error);
+          console.error('Erro ao buscar itens:', error)
         }
-      };
-      fetchItems();
+      }
+      fetchItems()
     }
-  }, [isLoading, token, currentPage]);
+  }, [isLoading, token, currentPage])
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) return
 
     const fetchItems = async () => {
       try {
@@ -50,16 +48,16 @@ const ItemListPage = () => {
           inOffer: true,
           itemsPerPage,
           token,
-        });
-        setItems(result.data);
-        setTotalPages(result.totalPages);
-        setCurrentPage(result.currentPage);
+        })
+        setItems(result.data)
+        setTotalPages(result.totalPages)
+        setCurrentPage(result.currentPage)
       } catch (error) {
-        console.error('Erro ao buscar itens:', error);
+        console.error('Erro ao buscar itens:', error)
       }
-    };
-    fetchItems();
-  }, [currentPage]);
+    }
+    fetchItems()
+  }, [currentPage])
 
   return (
     <>
@@ -80,7 +78,7 @@ const ItemListPage = () => {
       </main>
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default ItemListPage;
+export default ItemListPage

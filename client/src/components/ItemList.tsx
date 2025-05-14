@@ -1,45 +1,41 @@
-import ItemDetailCard from './ItemDetailCard';
-import Pagination from './Pagination';
-import { UserItemResponse, ItemDetailFooterSetup, AuthUser } from '../types/item';
-import { PageType } from '../types/page';
-import { useAuth } from '../context/AuthContext';
-
-
+import ItemDetailCard from './ItemDetailCard'
+import Pagination from './Pagination'
+import { UserItemResponse, ItemDetailFooterSetup, AuthUser } from '../types/item'
+import { PageType } from '../types/page'
+import { useAuth } from '../context/AuthContext'
 
 interface ItemListProps {
-  user?: AuthUser | null;
-  items: UserItemResponse[];
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  page: PageType;
-  item?: UserItemResponse;
+  user?: AuthUser | null
+  items: UserItemResponse[]
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  page: PageType
+  item?: UserItemResponse
 }
 
 const ItemList = ({ items, currentPage, totalPages, onPageChange, page, item }: ItemListProps) => {
-
-  const { token, user } = useAuth();
+  const { token, user } = useAuth()
 
   const itemDetailMakeOffer: ItemDetailFooterSetup = {
     userInfo: { show: true },
-    actionMenu: { show: token ? true : false  },
+    actionMenu: { show: token ? true : false },
     page,
     item,
-  };
+  }
 
   const itemDetailOwner: ItemDetailFooterSetup = {
     userInfo: { show: true },
-    actionMenu: { show: false  },
+    actionMenu: { show: false },
     page,
     item,
-  };
-
+  }
 
   return (
     <div>
       {items.map((item) => {
-        const isOwner = item.user.id === parseInt(user?.id ?? "");
-  
+        const isOwner = item.user.id === parseInt(user?.id ?? '')
+
         const footerSetup =
           page === PageType.Items
             ? isOwner
@@ -47,8 +43,8 @@ const ItemList = ({ items, currentPage, totalPages, onPageChange, page, item }: 
               : itemDetailMakeOffer
             : isOwner
               ? itemDetailMakeOffer
-              : itemDetailOwner;
-  
+              : itemDetailOwner
+
         return (
           <ItemDetailCard
             key={item.id}
@@ -64,12 +60,11 @@ const ItemList = ({ items, currentPage, totalPages, onPageChange, page, item }: 
             tradeType={item.tradeType}
             footerSetup={footerSetup}
           />
-        );
+        )
       })}
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
     </div>
-  );
-  
-};
+  )
+}
 
-export default ItemList;
+export default ItemList

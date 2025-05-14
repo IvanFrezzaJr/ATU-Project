@@ -1,4 +1,4 @@
-@import "@picocss/pico/css/pico.min.css";
+@import '@picocss/pico/css/pico.min.css';
 
 * {
   margin: 0;
@@ -6,16 +6,17 @@
   box-sizing: border-box;
 }
 
-html, body {
-    height: 100%;
-  }
-  
-  body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 header {
   height: 4rem;
   font-size: medium;
@@ -25,42 +26,37 @@ nav {
   height: 4rem;
 }
 
-  main {
-    flex: 1;
-    min-height: calc(100vh - 6rem);
-  }
-
-  
-  footer {
-    position: relative;
-    background-color: var(--pico-primary-background);
-    color: var(--pico-primary-inverse);
-    height: 2rem;
-    text-align: center;
-    font-size: small;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-  
-  .viewport {
-    max-width: clamp(20rem, 50%, 40rem);
-    margin: auto;
-  }
-
-
-
-  .profile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+main {
+  flex: 1;
+  min-height: calc(100vh - 6rem);
 }
 
+footer {
+  position: relative;
+  background-color: var(--pico-primary-background);
+  color: var(--pico-primary-inverse);
+  height: 2rem;
+  text-align: center;
+  font-size: small;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.viewport {
+  max-width: clamp(20rem, 50%, 40rem);
+  margin: auto;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .profile img {
-    border-radius: 50%;
-    border: 1px solid var(--pico-secondary);
-
+  border-radius: 50%;
+  border: 1px solid var(--pico-secondary);
 }
 
 button {
@@ -71,7 +67,6 @@ button {
   padding: 3rem 0;
 }
 
-
 .center {
   text-align: center;
 }
@@ -79,7 +74,6 @@ button {
 .small {
   font-size: small;
 }
-
 
 .message {
   padding: 1rem;
@@ -100,8 +94,6 @@ button {
   border: 1px solid #aaffc4;
 }
 
-
-
 .flex-between {
   display: flex;
   justify-content: space-between;
@@ -111,7 +103,6 @@ button {
 .margin-bottom {
   margin-bottom: 2rem;
 }
-
 
 .margin-top {
   margin-top: 5rem;

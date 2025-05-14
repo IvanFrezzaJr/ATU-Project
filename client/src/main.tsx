@@ -1,12 +1,12 @@
 import { render } from 'preact'
 // import './index.css'
 import { App } from './app.tsx'
-import { AuthProvider } from './context/AuthContext';
-import './styles/global.css';
+import { AuthProvider } from './context/AuthContext'
+import './styles/global.css'
 
 render(
-    <AuthProvider>
+  <AuthProvider>
     <App />
-    </AuthProvider>,
-    document.getElementById('app')!
+  </AuthProvider>,
+  document.getElementById('app')!
 )

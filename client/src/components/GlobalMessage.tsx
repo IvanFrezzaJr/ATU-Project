@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks'
 
 type Props = {
-  message: string;
-  type: 'error' | 'success';
-  onClose?: () => void;
-};
+  message: string
+  type: 'error' | 'success'
+  onClose?: () => void
+}
 
 export const GlobalMessage = ({ message, type, onClose }: Props) => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setVisible(false);
-      onClose?.();
-    }, 10000);
+      setVisible(false)
+      onClose?.()
+    }, 10000)
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer)
+  }, [])
 
-  if (!visible) return null;
+  if (!visible) return null
 
-  const className = type === 'error' ? 'contrast' : 'secondary';
+  const className = type === 'error' ? 'contrast' : 'secondary'
 
   return (
     <div className={`container`}>
@@ -28,5 +28,5 @@ export const GlobalMessage = ({ message, type, onClose }: Props) => {
         {message}
       </div>
     </div>
-  );
-};
+  )
+}

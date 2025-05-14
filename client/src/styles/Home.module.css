@@ -1,26 +1,20 @@
+.logo {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
 
-  
-  .logo {
-    width: 100%;
-    display: flex;
-    text-align: center;
-    justify-content: center;
+.logo img {
+  margin: 1rem;
+  width: 5rem;
+}
 
-  }
-  
-  .logo img {
-    margin: 1rem;
-    width: 5rem;
-  }
-  
-  .logo h3 {
-    margin: 1rem;
-    color: var(--pico-secondary);
-  }
-  
-  .logo h3 strong {
-    color: var(--pico-primary);
-  }
-  
+.logo h3 {
+  margin: 1rem;
+  color: var(--pico-secondary);
+}
 
-  
+.logo h3 strong {
+  color: var(--pico-primary);
+}

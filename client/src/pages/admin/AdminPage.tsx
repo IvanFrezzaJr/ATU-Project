@@ -1,38 +1,38 @@
 // src/pages/AdminLayout.tsx
 
-import { useEffect } from 'preact/hooks';
-import { useParams, useLocation } from 'wouter-preact';
-import { useAuth } from '../../context/AuthContext';
+import { useEffect } from 'preact/hooks'
+import { useParams, useLocation } from 'wouter-preact'
+import { useAuth } from '../../context/AuthContext'
 
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import styles from '../../styles/Admin.module.css';
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+import styles from '../../styles/Admin.module.css'
 
-import ProfilePage from './AdminProfilePage';
-import ItemPage from './AdminItemPage';
-import AdminTradePage from './AdminTradePage';
+import ProfilePage from './AdminProfilePage'
+import ItemPage from './AdminItemPage'
+import AdminTradePage from './AdminTradePage'
 
 const AdminLayout = () => {
-  const { section } = useParams();
-  const [, setLocation] = useLocation();
-  const { token } = useAuth();
+  const { section } = useParams()
+  const [, setLocation] = useLocation()
+  const { token } = useAuth()
 
   useEffect(() => {
-    if (!token) setLocation('/');
-  }, [token]);
+    if (!token) setLocation('/')
+  }, [token])
 
   const renderPage = () => {
     switch (section) {
       case 'profile':
-        return <ProfilePage />;
+        return <ProfilePage />
       case 'items':
-        return <ItemPage />;
+        return <ItemPage />
       case 'trades':
-        return <AdminTradePage />;
+        return <AdminTradePage />
       default:
-        return <ProfilePage />;
+        return <ProfilePage />
     }
-  };
+  }
 
   return (
     <div>
@@ -49,7 +49,7 @@ const AdminLayout = () => {
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default AdminLayout;
+export default AdminLayout

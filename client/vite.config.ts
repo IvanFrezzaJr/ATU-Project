@@ -3,13 +3,11 @@ import preact from '@preact/preset-vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    preact()
-  ],
+  plugins: [preact()],
   resolve: {
     alias: {
-      react: "preact/compat",
-      "react-dom": "preact/compat",
+      react: 'preact/compat',
+      'react-dom': 'preact/compat',
     },
   },
   server: {

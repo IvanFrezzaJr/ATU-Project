@@ -1,37 +1,49 @@
-import ThemeToggle from './ThemeToggle';
-import profilePlaceholder from '../assets/profile-placeholder.png';
-import { Link, useLocation } from 'wouter-preact';
-import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle'
+import profilePlaceholder from '../assets/profile-placeholder.png'
+import { Link, useLocation } from 'wouter-preact'
+import { useAuth } from '../context/AuthContext'
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL
 
 const Header = () => {
-  const { user, logout } = useAuth();
-  const [, navigate] = useLocation();
+  const { user, logout } = useAuth()
+  const [, navigate] = useLocation()
 
   const handleLogin = () => {
-    navigate('/Login');
-  };
+    navigate('/Login')
+  }
 
   const handleSignUp = () => {
-    navigate('/SignUp');
-  };
+    navigate('/SignUp')
+  }
 
   const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+    logout()
+    navigate('/')
+  }
 
   return (
     <header>
       <nav className="container" id="menu">
         <ul>
-          <li><Link href="/"><strong>Barter</strong> Exchange platform</Link></li>
+          <li>
+            <Link href="/">
+              <strong>Barter</strong> Exchange platform
+            </Link>
+          </li>
         </ul>
         <ul>
-          <li><Link href="/items" className="secondary active">Items</Link></li>
-          <li><Link href="/About" className="secondary active">About</Link></li>
-          
+          <li>
+            <Link href="/items" className="secondary active">
+              Items
+            </Link>
+          </li>
+          <li>
+            <Link href="/About" className="secondary active">
+              About
+            </Link>
+          </li>
+
           {user ? (
             <>
               <li>
@@ -41,10 +53,14 @@ const Header = () => {
               </li>
               <li className="profile">
                 <Link href="/admin/profile">
-                  <img src={user.image ? `${apiUrl}${user.image}` : profilePlaceholder} width="40" height="40" alt="User admin" />
+                  <img
+                    src={user.image ? `${apiUrl}${user.image}` : profilePlaceholder}
+                    width="40"
+                    height="40"
+                    alt="User admin"
+                  />
                 </Link>
               </li>
-              
             </>
           ) : (
             <>
@@ -58,15 +74,16 @@ const Header = () => {
                   Sign in
                 </button>
               </li>
-             
             </>
           )}
 
-          <li><ThemeToggle /></li>
+          <li>
+            <ThemeToggle />
+          </li>
         </ul>
       </nav>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
