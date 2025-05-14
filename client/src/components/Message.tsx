@@ -1,28 +1,28 @@
-import { useState } from "preact/hooks";
+import { useState } from 'preact/hooks'
 
 interface MessageProps {
-  title: string;
-  message: string;
-  onClose?: () => void;
+  title: string
+  message: string
+  onClose?: () => void
 }
 
 const Message = ({ title, message, onClose }: MessageProps) => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(true)
 
-  if (!visible) return null;
+  if (!visible) return null
 
   const handleClose = () => {
-    setVisible(false);
-    if (onClose) onClose();
-  };
+    setVisible(false)
+    if (onClose) onClose()
+  }
 
   return (
     <dialog open>
       <article>
         <header>
-            <p>
-                <strong>{title}</strong>
-            </p> 
+          <p>
+            <strong>{title}</strong>
+          </p>
         </header>
         <p>{message}</p>
         <footer>
@@ -30,7 +30,7 @@ const Message = ({ title, message, onClose }: MessageProps) => {
         </footer>
       </article>
     </dialog>
-  );
-};
+  )
+}
 
-export default Message;
+export default Message

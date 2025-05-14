@@ -1,34 +1,34 @@
-import styles from '../styles/Pagination.module.css';
+import styles from '../styles/Pagination.module.css'
 
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
 }
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
   const goToPage = (page: number) => {
-    if (page < 1 || page > totalPages) return;
-    onPageChange(page);
-  };
+    if (page < 1 || page > totalPages) return
+    onPageChange(page)
+  }
 
   const getPageNumbers = () => {
-    const range: number[] = [];
-    const maxVisible = 5;
-    const half = Math.floor(maxVisible / 2);
-    let start = Math.max(1, currentPage - half);
-    let end = Math.min(totalPages, start + maxVisible - 1);
+    const range: number[] = []
+    const maxVisible = 5
+    const half = Math.floor(maxVisible / 2)
+    let start = Math.max(1, currentPage - half)
+    let end = Math.min(totalPages, start + maxVisible - 1)
 
     if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
+      start = Math.max(1, end - maxVisible + 1)
     }
 
     for (let i = start; i <= end; i++) {
-      range.push(i);
+      range.push(i)
     }
 
-    return range;
-  };
+    return range
+  }
 
   return (
     <div class={styles.pagination}>
@@ -58,7 +58,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
         Next &gt;
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default Pagination;
+export default Pagination

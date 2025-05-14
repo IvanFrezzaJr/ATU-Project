@@ -1,42 +1,39 @@
 .searchPagination {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .searchPagination button {
-    max-height: 3rem;
-    margin-left: 20px;
+  max-height: 3rem;
+  margin-left: 20px;
 }
 
 .footerPagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
 }
 
 .searchPagination h2 {
-    width: 50%;
+  width: 50%;
 }
-
 
 .actions {
-    display: flex;
-    gap: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
-
 .grid {
-    font-size: 0.6rem;
-    padding-bottom: 2rem;
+  font-size: 0.6rem;
+  padding-bottom: 2rem;
 }
 
 .grid h2 {
-    padding: 1rem 0;
-    font-size: 1rem;
+  padding: 1rem 0;
+  font-size: 1rem;
 }
 
 .grid h3 {
-    font-size: 1rem;
+  font-size: 1rem;
 }
-

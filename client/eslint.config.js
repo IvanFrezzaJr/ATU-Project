@@ -9,7 +9,7 @@ export default [
     ignores: ['dist', 'node_modules'],
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.ts', '**/*.tsx', 'vite.config.ts'],
     languageOptions: {
       parser,
       parserOptions: {

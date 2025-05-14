@@ -3,7 +3,7 @@ const Footer = () => {
     <footer>
       <small>ATU Project - Ivan Jose Frezza Jr</small>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

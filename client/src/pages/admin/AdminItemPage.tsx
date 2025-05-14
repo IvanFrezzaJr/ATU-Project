@@ -1,47 +1,47 @@
 // src/pages/ItemPage.tsx
 
-import { useEffect, useState } from "preact/hooks";
-import { deleteItem, getPaginatedItems } from "../../services/itemService";
-import { UserItemResponse } from "../../types/item";
-import { GlobalMessage } from '../../components/GlobalMessage';
-import { useAuth } from "../../context/AuthContext";
-import { useLocation } from "wouter-preact";
+import { useEffect, useState } from 'preact/hooks'
+import { deleteItem, getPaginatedItems } from '../../services/itemService'
+import { UserItemResponse } from '../../types/item'
+import { GlobalMessage } from '../../components/GlobalMessage'
+import { useAuth } from '../../context/AuthContext'
+import { useLocation } from 'wouter-preact'
 
 // Ícones do MUI
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CreateIcon from '@mui/icons-material/AddCircle';
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import CreateIcon from '@mui/icons-material/AddCircle'
 
 // Estilos
-import styles from '../../styles/Grid.module.css';
-import { getTradeTypeDisplay } from "../../utils/tradeUtils";
-import { getStatusDisplay } from "../../utils/statusUtils";
-import Pagination from "../../components/Pagination";
+import styles from '../../styles/Grid.module.css'
+import { getTradeTypeDisplay } from '../../utils/tradeUtils'
+import { getStatusDisplay } from '../../utils/statusUtils'
+import Pagination from '../../components/Pagination'
 
 const ItemPage = () => {
-  const [items, setItems] = useState<UserItemResponse[]>([]);
-  const [, setLocation] = useLocation();
-  const [currentPage,setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10;
-  const [globalMessage, setGlobalMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [items, setItems] = useState<UserItemResponse[]>([])
+  const [, setLocation] = useLocation()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const itemsPerPage = 10
+  const [globalMessage, setGlobalMessage] = useState<{
+    type: 'success' | 'error'
+    text: string
+  } | null>(null)
 
-  const { token, user } = useAuth();
-
-
+  const { token, user } = useAuth()
 
   useEffect(() => {
     if (!token) {
-      setLocation('/');
+      setLocation('/')
     }
-  }, [token]);
+  }, [token])
 
   useEffect(() => {
     if (token) {
-      loadItems();
+      loadItems()
     }
-}, [token, currentPage]);
-
+  }, [token, currentPage])
 
   const loadItems = async () => {
     try {
@@ -49,47 +49,42 @@ const ItemPage = () => {
         page: currentPage,
         itemsPerPage,
         token,
-        userId: user ? parseInt(user?.id) : null
-      });
+        userId: user ? parseInt(user?.id) : null,
+      })
 
-      setItems(result.data);
-      setTotalPages(result.totalPages);
-      setCurrentPage(result.currentPage);
+      setItems(result.data)
+      setTotalPages(result.totalPages)
+      setCurrentPage(result.currentPage)
     } catch (error) {
-      console.error('Error fetching items:', error);
+      console.error('Error fetching items:', error)
     }
   }
 
-  
   const handleDelete = async (itemId: number) => {
+    if (!token) return
 
-      if (!token) return;
-
-      try {
-          await deleteItem(itemId, token);
-          setGlobalMessage({ type: 'success', text: `Item ${itemId} successfully deleted` });
-          await loadItems();
-      } catch (error) {
-          if (error instanceof Error) {
-              setGlobalMessage({ type: 'error', text: error.message});
-          } else {
-              setGlobalMessage({ type: 'error', text: "Unexpected error. Contact the system admin."});
-          }
+    try {
+      await deleteItem(itemId, token)
+      setGlobalMessage({ type: 'success', text: `Item ${itemId} successfully deleted` })
+      await loadItems()
+    } catch (error) {
+      if (error instanceof Error) {
+        setGlobalMessage({ type: 'error', text: error.message })
+      } else {
+        setGlobalMessage({ type: 'error', text: 'Unexpected error. Contact the system admin.' })
       }
-  };
-  
-
+    }
+  }
 
   const handleEdit = async (itemId: number) => {
-      if (!token) return;
-      setLocation(`/items/${itemId}`)
-  };
-
+    if (!token) return
+    setLocation(`/items/${itemId}`)
+  }
 
   const handleCreate = async () => {
-    if (!token) return;
-    
-    setLocation("/items/new")
+    if (!token) return
+
+    setLocation('/items/new')
   }
 
   return (
@@ -107,7 +102,9 @@ const ItemPage = () => {
           <div className={styles.title}>
             <h2>Item Page</h2>
           </div>
-          <button onClick={() => handleCreate()}><CreateIcon /> Create Item</button>
+          <button onClick={() => handleCreate()}>
+            <CreateIcon /> Create Item
+          </button>
         </div>
 
         <div className={styles.grid}>
@@ -124,8 +121,8 @@ const ItemPage = () => {
             </thead>
             <tbody>
               {items.map((item) => {
-                const { label, style } = getStatusDisplay(item.status);
-                const { label: tradeLabel, style: tradeStyle } = getTradeTypeDisplay(item.tradeType);
+                const { label, style } = getStatusDisplay(item.status)
+                const { label: tradeLabel, style: tradeStyle } = getTradeTypeDisplay(item.tradeType)
 
                 return (
                   <tr key={item.id}>
@@ -135,11 +132,19 @@ const ItemPage = () => {
                     <td style={style}>{label}</td>
                     <td style={tradeStyle}>{tradeLabel}</td>
                     <td class="actions">
-                      <span class="material-icons" onClick={() => handleEdit(item.id)} style={{ cursor: 'pointer' }}>
+                      <span
+                        class="material-icons"
+                        onClick={() => handleEdit(item.id)}
+                        style={{ cursor: 'pointer' }}
+                      >
                         <EditIcon />
                       </span>
 
-                      <span class="material-icons" onClick={() => handleDelete(item.id)} style={{ cursor: 'pointer' }}>
+                      <span
+                        class="material-icons"
+                        onClick={() => handleDelete(item.id)}
+                        style={{ cursor: 'pointer' }}
+                      >
                         <DeleteIcon />
                       </span>
                     </td>
@@ -149,15 +154,20 @@ const ItemPage = () => {
             </tbody>
           </table>
           <div className={styles.footerPagination}>
-            <p>Showing {totalPages} out of {totalPages} entries</p>
+            <p>
+              Showing {totalPages} out of {totalPages} entries
+            </p>
           </div>
         </div>
-       
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </main>
-  );
-};
+  )
+}
 
-
-export default ItemPage;
+export default ItemPage
