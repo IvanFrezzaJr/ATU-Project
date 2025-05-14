@@ -65,7 +65,7 @@ def create_trade(
         user_item_id_to=trade.user_item_id_to,
         trade_date=datetime.now(),
         trade_status=trade.trade_status,
-    )
+    )  # type: ignore
 
     session.add(db_trade)
     session.commit()

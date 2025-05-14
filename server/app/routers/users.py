@@ -32,11 +32,7 @@ def create_user(
     session: T_Session,
 ):
     # search for unique user
-    db_user = session.scalar(
-        select(User).where(
-            (User.email == user.email)
-        )
-    )
+    db_user = session.scalar(select(User).where((User.email == user.email)))
 
     # valdiation email and email
     if db_user:
@@ -51,7 +47,7 @@ def create_user(
         name=user.name,
         email=user.email,
         password=get_password_hash(user.password),
-    )
+    )  # type: ignore
 
     # insert into the database
     session.add(db_user)
