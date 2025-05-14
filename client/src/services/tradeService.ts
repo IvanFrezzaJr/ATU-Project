@@ -37,7 +37,7 @@ export const createTrade = async (trade: TradeCreateSchema): Promise<TradePublic
     body: JSON.stringify(camelToSnake(trade)),
   })
 
-  const data = await handleApiResponse<void>(response)
+  const data = await handleApiResponse<TradePublic>(response)
 
   return snakeToCamel(data)
 }
