@@ -354,10 +354,10 @@ def update_trade(
     for field, value in update_data.model_dump(exclude_unset=True).items():
         setattr(trade, field, value)
 
-    if (
-        update_data.trade_status == TradeStatusEnum.accepted
-        or update_data.trade_status == TradeStatusEnum.completed
-    ):
+    if update_data.trade_status in {
+        TradeStatusEnum.accepted,
+        TradeStatusEnum.completed,
+    }:
         _update_items_accepted(
             session, trade.user_item_id_from, trade.user_item_id_to
         )

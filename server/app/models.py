@@ -2,7 +2,13 @@ import enum
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import TIMESTAMP, ForeignKey, Integer, String, UniqueConstraint, func
+from sqlalchemy import (
+    TIMESTAMP,
+    ForeignKey,
+    Integer,
+    String,
+    func,
+)
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
 
@@ -14,6 +20,7 @@ class ItemStatusEnum(enum.Enum):
     offer_agreed = 'offer_agreed'
     in_offer = 'in_offer'
     not_listed = 'not_listed'
+
 
 class TradeStatusEnum(enum.Enum):
     opened = 'opened'
@@ -61,7 +68,7 @@ class UserItem:
     name: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
-    user: Mapped["User"] = relationship(init=False)
+    user: Mapped['User'] = relationship(init=False)
 
     images_path: Mapped[List[str]] = mapped_column(ARRAY(String), default=None)
     quantity: Mapped[int] = mapped_column(Integer, default=1)
@@ -95,12 +102,22 @@ class Trade:
     user_item_id_from: Mapped[int] = mapped_column(
         ForeignKey('user_item.id'), nullable=False
     )
-    user_item_from: Mapped["UserItem"] = relationship("UserItem", foreign_keys=[user_item_id_from], backref="trade_from", init=False)
+    user_item_from: Mapped['UserItem'] = relationship(
+        'UserItem',
+        foreign_keys=[user_item_id_from],
+        backref='trade_from',
+        init=False,
+    )
 
     user_item_id_to: Mapped[int] = mapped_column(
         ForeignKey('user_item.id'), nullable=False
     )
-    user_item_to: Mapped["UserItem"] = relationship("UserItem", foreign_keys=[user_item_id_to], backref="trade_to", init=False)
+    user_item_to: Mapped['UserItem'] = relationship(
+        'UserItem',
+        foreign_keys=[user_item_id_to],
+        backref='trade_to',
+        init=False,
+    )
 
     trade_date: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False))
 

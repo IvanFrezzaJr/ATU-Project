@@ -5,11 +5,13 @@ from app.settings import Settings
 
 settings = Settings()
 
+
+# TODO: add allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"]
 def setup_cors(app: FastAPI) -> None:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],  # TODO: add allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"]
+        allow_origins=['*'],
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=['*'],
+        allow_headers=['*'],
     )
