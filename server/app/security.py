@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
+from typing import Optional
 
 from fastapi import Depends, HTTPException, Request
-from typing import Optional
 from fastapi.security import OAuth2PasswordBearer
 from jwt import DecodeError, ExpiredSignatureError, decode, encode
 from pwdlib import PasswordHash
@@ -41,11 +41,11 @@ def verify_password(plain_password: str, hashed_password: str):
 
 
 def get_token_from_request(request: Request) -> str:
-    auth_header = request.headers.get("Authorization")
-    if auth_header and auth_header.startswith("Bearer "):
-        return auth_header.split(" ")[1]
+    auth_header = request.headers.get('Authorization')
+    if auth_header and auth_header.startswith('Bearer '):
+        return auth_header.split(' ')[1]
 
-    return ""
+    return ''
 
 
 def get_current_user(
@@ -73,9 +73,7 @@ def get_current_user(
     except DecodeError:
         raise credentials_exception
 
-    user = session.scalar(
-        select(User).where(User.email == token_data.email)
-    )
+    user = session.scalar(select(User).where(User.email == token_data.email))
 
     if not user:
         raise credentials_exception
@@ -84,14 +82,14 @@ def get_current_user(
 
 
 def get_optional_user(
-        session: Session = Depends(get_session), 
-        token: str = Depends(get_token_from_request)
-    ) -> Optional[User]:
-
-
+    session: Session = Depends(get_session),
+    token: str = Depends(get_token_from_request),
+) -> Optional[User]:
     try:
-        payload = decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        email: str = payload.get("sub")
+        payload = decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
+        email: str = payload.get('sub')
         if not email:
             return None
 
@@ -102,7 +100,7 @@ def get_optional_user(
 
     except ExpiredSignatureError:
         return None
-    
+
     except DecodeError:
         return None
 

@@ -1,28 +1,25 @@
+import shutil
 from http import HTTPStatus
+from pathlib import Path
 from typing import Annotated, Optional
 from uuid import uuid4
 
-from fastapi import UploadFile, File
-from pathlib import Path
-import shutil
-
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import or_, select, func
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.database import get_session
-from app.models import ItemStatusEnum, Trade, UserItem, User
+from app.models import ItemStatusEnum, Trade, User, UserItem
 from app.schemas import (
     ItemCreateSchema,
-    ItemUpdateSchema,
     ItemList,
     ItemPublic,
+    ItemUpdateSchema,
     Message,
 )
 from app.security import get_current_user, get_optional_user
 
-
-UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR = Path('uploads')
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 router = APIRouter(prefix='/items', tags=['items'])
@@ -63,7 +60,6 @@ def read_items(
     item_status: ItemStatusEnum = Query(None),
     user_id: Optional[int] = Query(None),
 ):
-
     total_items = 0
     query = None
 
@@ -83,7 +79,7 @@ def read_items(
 
     if user_id:
         conditions.append(UserItem.user_id == user_id)
-        
+
     # Apply filters
     if conditions:
         base_query = base_query.where(*conditions)
@@ -98,13 +94,12 @@ def read_items(
 
     total_items = session.scalar(count_query)
 
-    if query  is None:
+    if query is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Items not found',
         )
 
-    
     items = session.scalars(query).all()
 
     return {
@@ -116,15 +111,13 @@ def read_items(
     }
 
 
-
 @router.get('/offers', response_model=ItemList)
-def read_items(
+def read_offers(
     session: T_Session,
     limit: int = Query(10, gt=0),
     offset: int = Query(0, ge=0),
     user_id: Optional[int] = Query(None),
 ):
-
     total_items = 0
     query = None
 
@@ -134,10 +127,9 @@ def read_items(
     conditions = []
     conditions.append(UserItem.status == ItemStatusEnum.in_offer)
 
-
     if user_id:
         conditions.append(UserItem.user_id == user_id)
-        
+
     # Apply filters
     if conditions:
         base_query = base_query.where(*conditions)
@@ -152,13 +144,12 @@ def read_items(
 
     total_items = session.scalar(count_query)
 
-    if query  is None:
+    if query is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Items not found',
         )
 
-    
     items = session.scalars(query).all()
 
     return {
@@ -168,9 +159,6 @@ def read_items(
         'currentPage': (offset // limit) + 1,
         'totalPages': (total_items + limit - 1) // limit,
     }
-
-
-
 
 
 @router.get('/{item_id}', response_model=ItemPublic)
@@ -235,15 +223,16 @@ def delete_item(
             status_code=HTTPStatus.FORBIDDEN,
             detail='Permission denied',
         )
-    
+
     trade_found = (
         session.query(Trade)
         .where(
             or_(
-                Trade.user_item_id_from == item_id, 
-                Trade.user_item_id_to == item_id
+                Trade.user_item_id_from == item_id,
+                Trade.user_item_id_to == item_id,
             )
-        ).first()
+        )
+        .first()
     )
 
     if trade_found:
@@ -258,14 +247,14 @@ def delete_item(
     return {'message': 'Item deleted'}
 
 
-@router.post("/upload-image")
+@router.post('/upload-image')
 def upload_image(file: UploadFile = File(...)):
     file_ext = Path(file.filename).suffix
-    filename = f"{uuid4()}{file_ext}"
+    filename = f'{uuid4()}{file_ext}'
     filepath = UPLOAD_DIR / filename
 
-    with filepath.open("wb") as buffer:
+    with filepath.open('wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     # Retorna apenas o path relativo
-    return {"path": f"/uploads/{filename}"}
+    return {'path': f'/uploads/{filename}'}

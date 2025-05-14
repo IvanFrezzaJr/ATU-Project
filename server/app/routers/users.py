@@ -46,7 +46,6 @@ def create_user(
                 detail='Email already exists',
             )
 
-
     # build model
     db_user = User(
         name=user.name,
@@ -95,8 +94,7 @@ def update_user(
         )
 
     try:
-        updates = user.model_dump(exclude_unset=True) 
-
+        updates = user.model_dump(exclude_unset=True)
 
         for field, value in updates.items():
             if field == 'password':

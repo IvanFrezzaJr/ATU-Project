@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
+
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models import ItemStatusEnum, TradeTypeEnum, TradeStatusEnum
+from app.models import ItemStatusEnum, TradeStatusEnum, TradeTypeEnum
 
 
 class Message(BaseModel):
@@ -12,9 +13,16 @@ class Message(BaseModel):
 
 
 class UserSchema(BaseModel):
-    name: str = Field(..., min_length=3, description="Name must be longer than 3 characters")
+    name: str = Field(
+        ..., min_length=3, description='Name must be longer than 3 characters'
+    )
+
     email: EmailStr
-    password: str = Field(..., min_length=8, description="Password must be at least 8 characters long")
+    password: str = Field(
+        ...,
+        min_length=8,
+        description='Password must be at least 8 characters long',
+    )
     anddress: Optional[AddressSchema] = None
 
 
@@ -54,7 +62,6 @@ class UserPublic(BaseModel):
     # valdiates only by schema attributes:
     # id, username and email
     model_config = ConfigDict(from_attributes=True)
-
 
 
 class UserList(BaseModel):
@@ -117,7 +124,7 @@ class TradeCreateSchema(BaseModel):
     user_item_id_from: int
     user_item_id_to: int
     trade_status: TradeStatusEnum = TradeStatusEnum.opened
-    
+
 
 class TradeUpdateSchema(BaseModel):
     trade_status: Optional[TradeStatusEnum] = None
