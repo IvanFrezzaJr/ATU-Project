@@ -32,14 +32,24 @@ def create_user(
     session: T_Session,
 ):
     # search for unique user
-    db_user = session.scalar(select(User).where((User.email == user.email)))
+    db_user = session.scalar(
+        select(User).where(
+            (User.name == user.name) | (User.email == user.email)
+        )
+    )
 
-    # valdiation email and email
+    # valdiation name and email
     if db_user:
         if db_user.email == user.email:
             raise HTTPException(
                 status_code=HTTPStatus.BAD_REQUEST,
                 detail='Email already exists',
+            )
+
+        if db_user.name == user.name:
+            raise HTTPException(
+                status_code=HTTPStatus.BAD_REQUEST,
+                detail='Username already exists',
             )
 
     # build model
@@ -106,7 +116,7 @@ def update_user(
     except IntegrityError:
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
-            detail='Email already exists',
+            detail='Username or Email already exists',
         )
 
 
