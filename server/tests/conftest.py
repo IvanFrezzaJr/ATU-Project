@@ -1,4 +1,6 @@
 import os
+import random
+from datetime import datetime
 
 import factory
 import pytest
@@ -9,7 +11,14 @@ from testcontainers.postgres import PostgresContainer
 
 from app.database import get_session
 from app.main import api
-from app.models import User, table_registry
+from app.models import (
+    ItemStatusEnum,
+    Trade,
+    TradeTypeEnum,
+    User,
+    UserItem,
+    table_registry,
+)
 from app.security import get_password_hash
 
 
@@ -20,6 +29,21 @@ class UserFactory(factory.Factory):
     name = factory.Sequence(lambda n: f'test{n}')
     email = factory.LazyAttribute(lambda obj: f'{obj.name}@test.com')
     password = factory.LazyAttribute(lambda obj: f'{obj.name}@example.com')
+
+
+class UserItemFactory(factory.Factory):
+    class Meta:
+        model = UserItem
+
+    name = factory.Sequence(lambda n: f'Item{n}')
+    description = factory.Faker('sentence')
+    user_id = None
+    images_path = factory.LazyFunction(
+        lambda: [f'/images/{random.randint(1, 100)}.jpg']
+    )
+    quantity = 1
+    status = ItemStatusEnum.in_offer
+    trade_type = TradeTypeEnum.post
 
 
 @pytest.fixture
@@ -93,9 +117,72 @@ def other_user(session):
 
 
 @pytest.fixture
+def item(session, user):
+    item = UserItemFactory(user_id=user.id)
+    session.add(item)
+    session.commit()
+    session.refresh(item)
+    return item
+
+
+@pytest.fixture
+def other_item(session, other_user):
+    item = UserItemFactory(user_id=other_user.id)
+    session.add(item)
+    session.commit()
+    session.refresh(item)
+    return item
+
+
+@pytest.fixture
+def item_with_trade(session):
+    user_from = UserFactory(password=get_password_hash('senha123'))
+    user_to = UserFactory(password=get_password_hash('senha456'))
+
+    session.add_all([user_from, user_to])
+    session.flush()
+
+    item_from = UserItemFactory(user_id=user_from.id)
+    item_to = UserItemFactory(user_id=user_to.id)
+
+    session.add_all([item_from, item_to])
+    session.flush()
+
+    # trade
+    trade = Trade(
+        user_item_id_from=item_from.id,
+        user_item_id_to=item_to.id,
+        trade_date=datetime.utcnow(),
+    )
+    session.add(trade)
+    session.commit()
+    session.refresh(trade)
+
+    return trade
+
+
+@pytest.fixture
 def token(client, user):
     response = client.post(
         'auth/token',
         data={'username': user.email, 'password': user.clean_password},
     )
     return response.json()['access_token']
+
+
+@pytest.fixture
+def cleanup_uploaded_files():
+    uploads_dir = os.path.join(os.getcwd(), 'uploads')
+    os.makedirs(uploads_dir, exist_ok=True)
+
+    existing_files = set(os.listdir(uploads_dir))
+
+    yield
+
+    all_files = set(os.listdir(uploads_dir))
+    new_files = all_files - existing_files
+
+    for file in new_files:
+        file_path = os.path.join(uploads_dir, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
