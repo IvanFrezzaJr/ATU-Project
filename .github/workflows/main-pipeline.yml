@@ -1,0 +1,46 @@
+# .github/workflows/main-pipeline.yml
+name: CI/CD Pipeline Orchestrator
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - development
+  pull_request:
+    branches:
+      - main
+      - staging
+      - development
+
+jobs:
+  check-files:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend_changed: ${{ steps.filter.outputs.frontend }}
+      backend_changed: ${{ steps.filter.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+
+  rontend-ci:
+    needs: check-files
+    if: needs.check-files.outputs.frontend_changed == 'true'
+    uses: ./.github/workflows/ci-frontend.yml
+
+  backend-ci:
+    needs: check-files
+    if: needs.check-files.outputs.backend_changed == 'true'
+    uses: ./.github/workflows/ci-backend.yml
+
+  # deploy: TODO: define file
+  #   needs: [ci-frontend, ci-backend]
+  #   if: ${{ always() && (needs.ci-frontend.result == 'success' || needs.ci-frontend.result == 'skipped') && (needs.ci-backend.result == 'success' || needs.ci-backend.result == 'skipped') }}
+  #   uses: ./.github/workflows/deploy.yml
