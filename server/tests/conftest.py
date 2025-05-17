@@ -1,3 +1,5 @@
+import os
+
 import factory
 import pytest
 from fastapi.testclient import TestClient
@@ -35,9 +37,22 @@ def client(session):
 
 @pytest.fixture(scope='session')
 def engine():
-    with PostgresContainer('postgres:16', driver='psycopg2') as postgres:
-        _engine = create_engine(postgres.get_connection_url())
+    use_testcontainers = (
+        os.getenv('USE_TESTCONTAINERS', 'true').lower() == 'true'
+    )
 
+    if use_testcontainers:
+        with PostgresContainer('postgres:16', driver='psycopg2') as postgres:
+            _engine = create_engine(postgres.get_connection_url())
+            with _engine.begin():
+                yield _engine
+    else:
+        # CI/CD
+        db_url = os.getenv(
+            'DATABASE_URL',
+            'postgresql+psycopg2://testuser:testpass@localhost:5432/testdb',
+        )
+        _engine = create_engine(db_url)
         with _engine.begin():
             yield _engine
 
