@@ -19,6 +19,7 @@ pwdlib = { extras = ["argon2"], version = "^0.2.1" }
 pyjwt = "^2.10.1"
 python-multipart = "^0.0.20"
 psycopg2 = { extras = ["binary"], version = "^2.9.10" }
+psycopg-binary = "^3.2.9"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -28,6 +29,9 @@ pytest-cov = "^5.0.0"
 taskipy = "^1.14.0"
 pre-commit = "^4.2.0"
 mypy = "^1.15.0"
+freezegun = "^1.5.1"
+testcontainers = "^4.10.0"
+factory-boy = "^3.3.3"
 
 [tool.pytest.ini_options]
 pythonpath = "."
