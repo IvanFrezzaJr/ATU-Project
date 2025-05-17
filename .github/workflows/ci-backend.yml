@@ -31,11 +31,12 @@ jobs:
 
     env:
       USE_TESTCONTAINERS: false
+      DATABASE_URL: postgresql+psycopg2://testuser:testpass@localhost:5432/testdb
       DATABASE_MIGRATION_URL: ${{ secrets.DATABASE_MIGRATION_URL }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ secrets.ALGORITHM }}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
-      DATABASE_URL: postgresql+psycopg2://testuser:testpass@localhost:5432/testdb
+      URL_ORIGIN: ${{ secrets.URL_ORIGIN }}
 
     defaults:
       run:
