@@ -139,7 +139,7 @@ def test_update_user_integrity_error(client, user, token):
     }
 
 
-def _test_update_user_403(client, other_user, token):
+def test_update_user_403(client, other_user, token):
     response = client.put(
         f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
@@ -152,7 +152,7 @@ def _test_update_user_403(client, other_user, token):
     assert response.status_code == HTTPStatus.FORBIDDEN
 
 
-def _test_delete_user(client, user, token):
+def test_delete_user(client, user, token):
     response = client.delete(
         f'/users/{user.id}',
         headers={'Authorization': f'Bearer {token}'},
@@ -161,7 +161,7 @@ def _test_delete_user(client, user, token):
     assert response.json() == {'message': 'User deleted'}
 
 
-def _test_delete_user_403(client, other_user, token):
+def test_delete_user_403(client, other_user, token):
     response = client.delete(
         f'/users/{other_user.id}', headers={'Authorization': f'Bearer {token}'}
     )
