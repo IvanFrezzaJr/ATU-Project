@@ -13,9 +13,9 @@ export interface User {
   updatedAt: Date
 }
 
-export interface UserLogin {
-  name: string
-  profilePic: string
+export interface UserToken {
+  accessToken: string
+  tokenType: string
 }
 
 export interface UserUpdate {

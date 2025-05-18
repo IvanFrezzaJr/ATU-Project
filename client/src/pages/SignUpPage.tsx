@@ -67,7 +67,7 @@ export default function SignUpPage() {
         password: passErr || '',
         confirmPassword: confirmErr || '',
       })
-      setGlobalMessage({ type: 'error', text: 'Error validating the form.' })
+      setGlobalMessage({ type: 'error', text: 'Error validating form.' })
       return
     }
 

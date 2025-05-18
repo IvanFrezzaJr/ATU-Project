@@ -54,7 +54,7 @@ export default function LoginPage() {
         email: emailErr || '',
         password: passwordErr || '',
       })
-      setGlobalMessage({ type: 'error', text: 'Error validating the form.' })
+      setGlobalMessage({ type: 'error', text: 'Error validating form.' })
       return
     }
 
