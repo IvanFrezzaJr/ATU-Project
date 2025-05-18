@@ -29,9 +29,9 @@ jobs:
         with:
           filters: |
             frontend:
-              - 'frontend/**'
+              - 'client/**'
             backend:
-              - 'backend/**'
+              - 'server/**'
 
   rontend-ci:
     needs: check-files
