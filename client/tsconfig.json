@@ -3,14 +3,17 @@
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["ESNext", "DOM"],
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "esModuleInterop": true,
-    "types": ["vitest"],
-    "baseUrl": ".",
+    "moduleResolution": "node",
     "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "types": ["vitest", "node"],
+    "baseUrl": ".",
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": ["src", "tests"]
 }
