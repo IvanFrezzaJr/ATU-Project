@@ -92,7 +92,7 @@ export default function ItemFormPage() {
     const nameErr = validateName(form.name)
     if (nameErr) {
       setErrors({ name: nameErr })
-      setGlobalMessage({ type: 'error', text: 'Error validating the form.' })
+      setGlobalMessage({ type: 'error', text: 'Error validating form.' })
       return
     }
 

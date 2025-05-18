@@ -1,11 +1,12 @@
-import { camelToSnake } from '../utils/caseConverters'
-import { UserLogin, UserUpdate } from '../types/user'
+import { camelToSnake, snakeToCamel } from '../utils/caseConverters'
+import { UserToken, UserUpdate } from '../types/user'
+import { handleApiResponse } from './baseService'
 
 const apiUrl = import.meta.env.VITE_API_URL
 const authUrl = `${apiUrl}/auth`
 const userUrl = `${apiUrl}/users`
 
-export const login = async (email: string, password: string): Promise<UserLogin> => {
+export const login = async (email: string, password: string): Promise<UserToken> => {
   const formData = new URLSearchParams()
   formData.append('username', email)
   formData.append('password', password)
@@ -16,12 +17,9 @@ export const login = async (email: string, password: string): Promise<UserLogin>
     body: formData.toString(),
   })
 
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.detail || 'Error logging in')
-  }
+  const data = await handleApiResponse<UserToken>(response)
 
-  return await response.json()
+  return snakeToCamel(data)
 }
 
 export const logout = async () => {
