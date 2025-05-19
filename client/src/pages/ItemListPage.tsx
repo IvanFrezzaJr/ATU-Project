@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 import ItemList from '../components/ItemList'
 import style from '../styles/ItemDetail.module.css'
 
-import { getPaginatedItems } from '../services/itemService'
+import { getPaginatedItems, searchItemsByTitle } from '../services/itemService'
 import { PageType } from '../types/page'
 import { UserItemResponse } from '../types/item'
 import { useAuth } from '../context/AuthContext'
@@ -17,16 +17,34 @@ const ItemListPage = () => {
 
   const { token, isLoading } = useAuth()
 
+  const queryParams = new URLSearchParams(window.location.search)
+
+  const searchQuery = queryParams.get('search')?.trim() || ''
+
   useEffect(() => {
     if (isLoading) return
 
     if (!token) {
       const fetchItems = async () => {
         try {
-          const result = await getPaginatedItems({
-            page: currentPage,
-            itemsPerPage,
-          })
+          let result = undefined
+          console.log('searchQuery', searchQuery)
+          if (searchQuery) {
+            result = await getPaginatedItems({
+              page: currentPage,
+              itemsPerPage,
+              inOffer: !!token,
+              token,
+              search: searchQuery,
+            })
+          } else {
+            result = await getPaginatedItems({
+              page: currentPage,
+              itemsPerPage,
+              inOffer: !!token,
+              token,
+            })
+          }
           setItems(result.data)
           setTotalPages(result.totalPages)
           setCurrentPage(result.currentPage)
@@ -36,7 +54,7 @@ const ItemListPage = () => {
       }
       fetchItems()
     }
-  }, [isLoading, token, currentPage])
+  }, [isLoading, token, currentPage, searchQuery])
 
   useEffect(() => {
     if (!token) return

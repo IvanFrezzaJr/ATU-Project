@@ -53,10 +53,11 @@ def create_item(
 
 
 @router.get('/', response_model=ItemList)
-def read_items(
+def read_items(  # noqa: PLR0913, PLR0917
     session: T_Session,
     limit: int = Query(10, gt=0),
     offset: int = Query(0, ge=0),
+    search: str = Query(None, min_length=3),
     item_status: ItemStatusEnum = Query(None),
     user_id: Optional[int] = Query(None),
 ):
@@ -79,6 +80,14 @@ def read_items(
 
     if user_id:
         conditions.append(UserItem.user_id == user_id)
+
+    if search:
+        conditions.append(
+            or_(
+                UserItem.name.ilike(f'%{search}%'),
+                UserItem.description.ilike(f'%{search}%'),
+            )
+        )
 
     # Apply filters
     if conditions:
