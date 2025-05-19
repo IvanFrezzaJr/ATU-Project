@@ -4,7 +4,7 @@ import {
   validateName,
   validatePassword,
   validateConfirmPassword,
-} from '../../src/utils/validators'
+} from '../src/utils/validators'
 
 describe('validateEmail', () => {
   it('returns null for valid email', () => {

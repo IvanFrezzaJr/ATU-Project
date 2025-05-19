@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { getStatusDisplay } from '../../src/utils/statusUtils'
-import { ItemStatus } from '../../src/types/item'
+import { getStatusDisplay } from '../src/utils/statusUtils'
+import { ItemStatus } from '../src/types/item'
 
 describe('getStatusDisplay', () => {
   it('returns correct display for OfferAgreed', () => {
