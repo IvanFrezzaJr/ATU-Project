@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { snakeToCamel, camelToSnake } from '../../src/utils/caseConverters'
+import { snakeToCamel, camelToSnake } from '../src/utils/caseConverters'
 
 describe('caseConverters', () => {
   describe('snakeToCamel', () => {

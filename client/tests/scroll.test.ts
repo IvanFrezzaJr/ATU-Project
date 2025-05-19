@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { scrollToTop } from '../../src/utils/scroll'
+import { scrollToTop } from '../src/utils/scroll'
 
 describe('scrollToTop', () => {
   it('calls window.scrollTo if scrollY > 0', () => {

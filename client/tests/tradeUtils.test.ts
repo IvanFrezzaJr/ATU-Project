@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { getTradeTypeDisplay } from '../../src/utils/tradeUtils'
-import { TradeType } from '../../src/types/item'
+import { getTradeTypeDisplay } from '../src/utils/tradeUtils'
+import { TradeType } from '../src/types/item'
 
 describe('getTradeTypeDisplay', () => {
   it('returns correct display for delivery', () => {
