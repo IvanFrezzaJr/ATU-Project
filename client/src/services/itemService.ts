@@ -11,6 +11,7 @@ interface GetPaginatedItemsParams {
   inOffer?: boolean
   userId?: number | null
   token?: string | null
+  search?: string | null
 }
 
 /**
@@ -111,6 +112,7 @@ export const getPaginatedItems = async ({
   itemsPerPage = 2,
   userId,
   token,
+  search,
 }: GetPaginatedItemsParams): Promise<PaginationResult<UserItemResponse>> => {
   const offset = (page - 1) * itemsPerPage
 
@@ -127,6 +129,7 @@ export const getPaginatedItems = async ({
     offset: offset.toString(),
   })
 
+  if (search) query.append('search', search)
   if (userId) query.append('user_id', userId.toString())
 
   console.log(`${itemsUrl}/?${query.toString()}`)
@@ -153,4 +156,15 @@ export const uploadImage = async (file: File): Promise<string> => {
 
   const data = await response.json()
   return data.path // Ex: "/uploads/uuid123.png"
+}
+
+export const searchItemsByTitle = async (title: string): Promise<UserItemResponse[]> => {
+  const query = new URLSearchParams({ q: title })
+
+  const response = await fetch(`${itemsUrl}/?search=${query.toString()}`)
+
+  if (!response.ok) throw new Error('Error searching items by title')
+
+  const data = await response.json()
+  return snakeToCamel(data)
 }
