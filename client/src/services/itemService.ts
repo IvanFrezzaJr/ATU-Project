@@ -157,14 +157,3 @@ export const uploadImage = async (file: File): Promise<string> => {
   const data = await response.json()
   return data.path // Ex: "/uploads/uuid123.png"
 }
-
-export const searchItemsByTitle = async (title: string): Promise<UserItemResponse[]> => {
-  const query = new URLSearchParams({ q: title })
-
-  const response = await fetch(`${itemsUrl}/?search=${query.toString()}`)
-
-  if (!response.ok) throw new Error('Error searching items by title')
-
-  const data = await response.json()
-  return snakeToCamel(data)
-}

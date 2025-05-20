@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 import ItemList from '../components/ItemList'
 import style from '../styles/ItemDetail.module.css'
 
-import { getPaginatedItems, searchItemsByTitle } from '../services/itemService'
+import { getPaginatedItems } from '../services/itemService'
 import { PageType } from '../types/page'
 import { UserItemResponse } from '../types/item'
 import { useAuth } from '../context/AuthContext'
