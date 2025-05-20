@@ -31,7 +31,7 @@ jobs:
       DATABASE_URL: postgresql+psycopg2://testuser:testpass@localhost:5432/testdb
       DATABASE_MIGRATION_URL: ${{ secrets.DATABASE_MIGRATION_URL }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ALGORITHM: ${{ secrets.ALGORITHM }}
+      ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
       URL_ORIGIN: ${{ secrets.URL_ORIGIN }}
 
