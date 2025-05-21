@@ -1,10 +1,10 @@
 name: Build and Push Docker Images
 
-permissions:
-  contents: read
-
 on:
   workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
   build-and-push:
@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Check Docker username secret
+        run: echo "Docker username is ${{ secrets.DOCKERHUB_USERNAME }}"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
