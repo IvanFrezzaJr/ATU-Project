@@ -33,7 +33,7 @@ jobs:
             backend:
               - 'server/**'
 
-  rontend-ci:
+  frontend-ci:
     needs: check-files
     if: needs.check-files.outputs.frontend_changed == 'true'
     uses: ./.github/workflows/ci-frontend.yml
@@ -43,7 +43,7 @@ jobs:
     if: needs.check-files.outputs.backend_changed == 'true'
     uses: ./.github/workflows/ci-backend.yml
 
-  # deploy: TODO: define file
-  #   needs: [ci-frontend, ci-backend]
-  #   if: ${{ always() && (needs.ci-frontend.result == 'success' || needs.ci-frontend.result == 'skipped') && (needs.ci-backend.result == 'success' || needs.ci-backend.result == 'skipped') }}
-  #   uses: ./.github/workflows/deploy.yml
+  push-images:
+    needs: [frontend-ci, backend-ci]
+    if: ${{ always() && (needs.frontend-ci.result == 'success' || needs.frontend-ci.result == 'skipped') && (needs.backend-ci.result == 'success' || needs.backend-ci.result == 'skipped') }}
+    uses: ./.github/workflows/docker-publish.yml
