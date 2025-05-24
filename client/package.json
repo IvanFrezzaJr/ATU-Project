@@ -14,7 +14,7 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.10.1",
     "@tanstack/react-router-devtools": "^1.114.31",
-    "@tanstack/router-plugin": "^1.114.31",
+    "@tanstack/router-plugin": "^1.120.10",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/preact": "^3.2.4",
     "@testing-library/user-event": "^14.6.1",
