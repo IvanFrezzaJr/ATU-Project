@@ -54,18 +54,27 @@ jobs:
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
       - name: Snyk Code test
-        run: snyk code test --sarif > snyk-code.sarif # || true
+        run: |
+          set -o pipefail
+          snyk code test --sarif > snyk-code.sarif
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
       
       - name: Snyk Open Source test client
         working-directory: ./client
-        run: snyk test || true
+        run: snyk test
+        continue-on-error: true
 
       - name: Snyk Open Source test server
         working-directory: ./server
-        run: snyk test || true
+        run: snyk test
+        continue-on-error: true
 
         # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk-code.sarif
+
+      - name: Fail if Snyk Code test failed
+        if: steps.snyk_code_test.outputs.exit_code != '0'
+        run: exit 1
