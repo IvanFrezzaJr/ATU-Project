@@ -29,7 +29,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: bolizome/ATU-project-client:latest
+          tags: bolizome/atu-project-client:latest
 
       - name: Build and push server image
         uses: docker/build-push-action@v4
@@ -37,4 +37,4 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: bolizome/ATU-project-server:latest
+          tags: bolizome/atu-project-server:latest
