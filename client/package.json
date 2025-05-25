@@ -36,7 +36,7 @@
     "jsdom": "^26.1.0",
     "lint-staged": "^16.0.0",
     "msw": "^2.8.3",
-    "preact": "^10.26.4",
+    "preact": "^10.26.7",
     "prettier": "^3.5.3",
     "rollup": "^2.79.1",
     "typescript": "~5.7.2",
