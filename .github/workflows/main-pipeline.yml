@@ -1,4 +1,3 @@
-# .github/workflows/main-pipeline.yml
 name: CI/CD Pipeline Orchestrator
 
 permissions:
