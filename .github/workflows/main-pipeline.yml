@@ -32,12 +32,16 @@ jobs:
             backend:
               - 'server/**'
 
+      - run: |
+          echo "Frontend changed: ${{ steps.filter.outputs.frontend }}"
+          echo "Backend changed: ${{ steps.filter.outputs.backend }}"
+
   frontend-ci:
     needs: check-files
-    if: needs.check-files.outputs.frontend_changed == 'true'
+    if: ${{ needs.check-files.outputs.frontend_changed == 'true' }}
     uses: ./.github/workflows/ci-frontend.yml
 
   backend-ci:
     needs: check-files
-    if: needs.check-files.outputs.backend_changed == 'true'
+    if: ${{ needs.check-files.outputs.backend_changed == 'true' }}
     uses: ./.github/workflows/ci-backend.yml
