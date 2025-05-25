@@ -20,6 +20,8 @@ api.include_router(auth.router)
 
 api.mount('/uploads', StaticFiles(directory='uploads'), name='uploads')
 
+print('FastAPI server started')
+
 
 @api.get('/', status_code=HTTPStatus.OK, response_model=Message)
 def read_root():
