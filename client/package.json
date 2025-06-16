@@ -51,7 +51,7 @@
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
     "@picocss/pico": "^2.1.1",
-    "@tanstack/react-router": "^1.114.29",
+    "@tanstack/react-router": "^1.120.10",
     "date-fns": "^4.1.0",
     "wouter-preact": "^3.6.1"
   },
